@@ -1,34 +1,34 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <meta charset='utf-8'>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <title>Jamm by mahmoudibrahim</title>
 
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-
-    <title>Jamm by mahmoudibrahim</title>
   </head>
-
   <body>
-    <header>
-      <div class="inner">
+    <div class="wrapper">
+      <header>
         <h1>Jamm</h1>
-        <h2>JAMM Peak Finder for Sequencing Datasets</h2>
-        <a href="https://github.com/mahmoudibrahim/JAMM" class="button"><small>View project on</small> GitHub</a>
-      </div>
-    </header>
+        <p>JAMM Peak Finder for Sequencing Datasets</p>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h1>
+        <p class="view"><a href="https://github.com/mahmoudibrahim/JAMM">View the Project on GitHub <small>mahmoudibrahim/JAMM</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/mahmoudibrahim/JAMM/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/mahmoudibrahim/JAMM/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/mahmoudibrahim/JAMM">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
 <a id="jamm-peak-finder" class="anchor" href="#jamm-peak-finder" aria-hidden="true"><span class="octicon octicon-link"></span></a>JAMM Peak Finder</h1>
 
 <p><strong>JAMM is a peak finder for NGS datasets (ChIP-Seq, ATAC-Seq, DNase-Seq..etc.) that can integrate replicates and assign peak boundaries accurately. JAMM is applicable to both broad and narrow datasets. Read more <a href="http://bioinformatics.oxfordjournals.org/content/early/2014/09/15/bioinformatics.btu568">in JAMM's publication</a>.</strong> </p>
@@ -50,50 +50,48 @@
 <li><p><strong>Nov 11 2014:</strong> After a recent R update, certain versions of some R packages are not compatible with certain versions of the "sqldf" R package. This affects all JAMM versions from v1.0.4 until v1.0.6. Starting v1.0.6rev1, JAMM has NO dependencies on "sqldf" package.</p></li>
 </ul>
 
-<p>===Download JAMM===
-<em>Current Version:</em> JAMM v1.0.7rev2 ([<a href="https://drive.google.com/file/d/0B8nxBVNVchN9QXl0QzJ3Ql9IRDA/view?usp=sharing">https://drive.google.com/file/d/0B8nxBVNVchN9QXl0QzJ3Ql9IRDA/view?usp=sharing</a> Download])</p>
-
-<p>Version used in publication: JAMM v1.0.4rev1 ([<a href="https://drive.google.com/file/d/0B8nxBVNVchN9eUtrQUU0RWV0bGc/edit?usp=sharing">https://drive.google.com/file/d/0B8nxBVNVchN9eUtrQUU0RWV0bGc/edit?usp=sharing</a> Download])</p>
-
-<p>[<a href="http://code.google.com/p/jamm-peak-finder/wiki/Downloads">http://code.google.com/p/jamm-peak-finder/wiki/Downloads</a> Previous Versions and Changelog] - [<a href="https://drive.google.com/file/d/0B8nxBVNVchN9eUdJV1FzdTEyTVU/view?usp=sharing">https://drive.google.com/file/d/0B8nxBVNVchN9eUdJV1FzdTEyTVU/view?usp=sharing</a> Details on differences between all released JAMM versions]</p>
-
-<p>===JAMM Documentation=== </p>
+<h2>
+<a id="jamm-documentation" class="anchor" href="#jamm-documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>JAMM Documentation</h2>
 
 <ul>
-<li>[<a href="http://code.google.com/p/jamm-peak-finder/wiki/IntroductionAndInstallation">http://code.google.com/p/jamm-peak-finder/wiki/IntroductionAndInstallation</a> Introduction and Installation]</li>
-<li>[<a href="http://code.google.com/p/jamm-peak-finder/wiki/Usage">http://code.google.com/p/jamm-peak-finder/wiki/Usage</a> How to Use]</li>
-<li>[<a href="http://code.google.com/p/jamm-peak-finder/wiki/FAQs">http://code.google.com/p/jamm-peak-finder/wiki/FAQs</a> Frequently Asked Questions]</li>
-<li>Of course it is always good to read [<a href="http://bioinformatics.oxfordjournals.org/content/31/1/48">http://bioinformatics.oxfordjournals.org/content/31/1/48</a> the actual paper] :)</li>
+<li>[Introduction and Installation]</li>
+<li>[How to Use]</li>
+<li>[Frequently Asked Questions]</li>
+<li>Of course it is always good to read <a href="http://bioinformatics.oxfordjournals.org/content/31/1/48">the actual paper</a> :)</li>
 </ul>
 
-<p>Please check [<a href="https://code.google.com/p/jamm-peak-finder/w/list">https://code.google.com/p/jamm-peak-finder/w/list</a> other Wiki pages] for more information on JAMM. </p>
+<p>Please check [other Wiki pages] for more information on JAMM. </p>
 
-<p>If you still have questions or need help running JAMM please post to [<a href="https://groups.google.com/forum/#!forum/jamm-peak-finder">https://groups.google.com/forum/#!forum/jamm-peak-finder</a> JAMM's Google group], or if you prefer you can email us at [<a href="http://www.google.com/recaptcha/mailhide/d?k=01vPijd2GG0LEbZV2NyE_rSA==&amp;c=49GEiFp47dZQV_120clczwxYcP3tQ98VWBJtNl6_dBw=">http://www.google.com/recaptcha/mailhide/d?k=01vPijd2GG0LEbZV2NyE_rSA==&amp;c=49GEiFp47dZQV_120clczwxYcP3tQ98VWBJtNl6_dBw=</a> this email].</p>
+<p>If you still have questions or need help running JAMM please email us at <a href="http://www.google.com/recaptcha/mailhide/d?k=01vPijd2GG0LEbZV2NyE_rSA==&amp;c=49GEiFp47dZQV_120clczwxYcP3tQ98VWBJtNl6_dBw=">this email</a>.</p>
 
-<p>===Example Dataset===
-<em>You can use [<a href="https://drive.google.com/file/d/0B8nxBVNVchN9cFFzQnQxMnNQUjQ/edit?usp=sharing">https://drive.google.com/file/d/0B8nxBVNVchN9cFFzQnQxMnNQUjQ/edit?usp=sharing</a> this small dataset] to test if JAMM is installed correctly (Installation instructions [<a href="https://code.google.com/p/jamm-peak-finder/wiki/IntroductionAndInstallation">https://code.google.com/p/jamm-peak-finder/wiki/IntroductionAndInstallation</a> here]).</em></p>
+<h2>
+<a id="example-dataset" class="anchor" href="#example-dataset" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example Dataset</h2>
 
-<p>This dataset is chromosome 21, in K562 CTCF ChIP-Seq from [<a href="https://genome.ucsc.edu/ENCODE/">https://genome.ucsc.edu/ENCODE/</a> ENCODE].</p>
+<p><em>You can use <a href="https://drive.google.com/file/d/0B8nxBVNVchN9cFFzQnQxMnNQUjQ/edit?usp=sharing">this small dataset</a> to test if JAMM is installed correctly. Installation instructions above!</em></p>
 
-<p>===Quick Tutorial=== 
-Before going ahead with this tutorial, please make sure JAMM is running properly on your machine using the small dataset provided above.</p>
+<p>This dataset is chromosome 21, in K562 CTCF ChIP-Seq from <a href="https://genome.ucsc.edu/ENCODE/">ENCODE</a>.</p>
 
-<p>The purpose of this tutorial is to help you get started with running JAMM. The tutorial uses ENCODE (Broad Institute) <code>H3K27ac</code> ChIP-Seq full dataset from <code>HeLa-S3</code> cells.</p>
+<h2>
+<a id="quick-tutorial" class="anchor" href="#quick-tutorial" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick Tutorial</h2>
+
+<p>Before going ahead with this tutorial, please make sure JAMM is running properly on your machine using the small dataset provided above.</p>
+
+<p>The purpose of this tutorial is to help you get started with running JAMM. The tutorial uses ENCODE (Broad Institute) H3K27ac ChIP-Seq full dataset from HeLa-S3 cells.</p>
 
 <p>It starts with the aligned BED files which we provide here. Those files were generated by aligning reads to hg19 using Bowtie2, followed by PCR duplicates removal using SAMtools. </p>
 
 <p><em>Step 1:</em> Download the <code>H3K27ac</code> ChIP-Seq BED files corresponding to Replicate 1, Replicate 2 and ChIP Input (Warning: Files are big, up to about 4Gb). </p>
 
 <ul>
-<li><p>[<a href="https://drive.google.com/file/d/0B8nxBVNVchN9c2lQQmZBSXZwQWM/edit?usp=sharing">https://drive.google.com/file/d/0B8nxBVNVchN9c2lQQmZBSXZwQWM/edit?usp=sharing</a> Replicate 1]</p></li>
-<li><p>[<a href="https://drive.google.com/file/d/0B8nxBVNVchN9OUlPQlQwNDRyWkU/edit?usp=sharing">https://drive.google.com/file/d/0B8nxBVNVchN9OUlPQlQwNDRyWkU/edit?usp=sharing</a> Replicate 2]</p></li>
-<li><p>[<a href="https://drive.google.com/file/d/0B8nxBVNVchN9WHpXRTdpY29hNDQ/edit?usp=sharing">https://drive.google.com/file/d/0B8nxBVNVchN9WHpXRTdpY29hNDQ/edit?usp=sharing</a> ChIP HeLa-S3 Broad Institute Input]</p></li>
+<li><p><a href="https://drive.google.com/file/d/0B8nxBVNVchN9c2lQQmZBSXZwQWM/edit?usp=sharing">Replicate 1</a></p></li>
+<li><p><a href="https://drive.google.com/file/d/0B8nxBVNVchN9OUlPQlQwNDRyWkU/edit?usp=sharing">Replicate 2</a></p></li>
+<li><p><a href="https://drive.google.com/file/d/0B8nxBVNVchN9WHpXRTdpY29hNDQ/edit?usp=sharing">ChIP HeLa-S3 Broad Institute Input</a></p></li>
 </ul>
 
 <p><em>Step 2:</em> Download the chromosome size file corresponding to hg19 genome build. This file is needed by JAMM to run.</p>
 
 <ul>
-<li>[<a href="https://drive.google.com/file/d/0B8nxBVNVchN9SGNsQXlrQTg3UTA/edit?usp=sharing">https://drive.google.com/file/d/0B8nxBVNVchN9SGNsQXlrQTg3UTA/edit?usp=sharing</a> hg19 chromosome size file]</li>
+<li><a href="https://drive.google.com/file/d/0B8nxBVNVchN9SGNsQXlrQTg3UTA/edit?usp=sharing">hg19 chromosome size file</a></li>
 </ul>
 
 <p><em>Step 3:</em> Create the directory structure you need to run JAMM. We recommend you set up a main directory called "<code>H3K27ac</code>" and 2 additional sub-directories called "sample" and "control":</p>
@@ -122,39 +120,26 @@ bash /path/to/JAMM/folder/JAMM.sh -s /path/to/your/"H3K27ac/sample"/folder -g /p
 
 <p>More information about JAMM output is provided on the [<a href="https://code.google.com/p/jamm-peak-finder/wiki/Usage">https://code.google.com/p/jamm-peak-finder/wiki/Usage</a> Usage Wiki page]</p>
 
-<p>===Example Peak Calls (Provided just as an example, not to be used directly in publications)===
-If you want to check out some JAMM results, you can [<a href="https://drive.google.com/file/d/0B8nxBVNVchN9RlhRcl9nUWNfN0k/edit?usp=sharing">https://drive.google.com/file/d/0B8nxBVNVchN9RlhRcl9nUWNfN0k/edit?usp=sharing</a> download JAMM peak calls for all ENCODE histone modification ChIP-Seq datasets] that were produced for the HeLaS3 cell line. Note: peak calls produced using JAMMv1.0.4. Note: Provided just as an example, not to be used directly in publications.</p>
+<h2>
+<a id="how-to-cite-jamm" class="anchor" href="#how-to-cite-jamm" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to Cite JAMM?</h2>
 
-<p>===How to Cite JAMM?===
-Please cite:</p>
+<p>Please cite:</p>
 
-<p>Ibrahim MM, Lacadie SA, Ohler U (2015). JAMM: A Peak Finder for Joint Analysis of NGS Replicates. <em>Bioinformatics</em>, 31(1): 48-55. doi: [<a href="http://bioinformatics.oxfordjournals.org/content/early/2014/09/15/bioinformatics.btu568">http://bioinformatics.oxfordjournals.org/content/early/2014/09/15/bioinformatics.btu568</a> 10.1093/bioinformatics/btu568]</p>
+<p><strong>Ibrahim MM, Lacadie SA, Ohler U (2015). JAMM: A Peak Finder for Joint Analysis of NGS Replicates. <em>Bioinformatics</em>, 31(1): 48-55. doi: <a href="http://bioinformatics.oxfordjournals.org/content/early/2014/09/15/bioinformatics.btu568">10.1093/bioinformatics/btu568</a></strong></p>
 
 <hr>
 
-<p>===  ===
-<em>Hint:</em> While you run JAMM, you can also go on jammin...
-===  ===
-</p>
-        </section>
+<p><em>Hint: While you run JAMM, you can also go on jammin...</em></p>
 
-        <aside id="sidebar">
-          <a href="https://github.com/mahmoudibrahim/JAMM/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/mahmoudibrahim/JAMM/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
-
-          <p class="repo-owner"><a href="https://github.com/mahmoudibrahim/JAMM"></a> is maintained by <a href="https://github.com/mahmoudibrahim">mahmoudibrahim</a>.</p>
-
-          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
-      </div>
+<p>
+<a href="http://www.youtube.com/watch?v=HSs1HgM0Wos"><img src="http://img.youtube.com/vi/HSs1HgM0Wos/0.jpg" alt="IMAGE ALT TEXT HERE"></a></p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/mahmoudibrahim">mahmoudibrahim</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
     </div>
-
-  
+    <script src="javascripts/scale.fix.js"></script>
+    
   </body>
 </html>
