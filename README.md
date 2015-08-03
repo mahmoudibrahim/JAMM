@@ -1,27 +1,29 @@
 JAMM Peak Finder
 ======
 
-**JAMM is a peak finder for NGS datasets (ChIP-Seq, ATAC-Seq, DNase-Seq..etc.) that can integrate replicates and assign peak boundaries accurately. JAMM is applicable to both broad and narrow datasets.** 
+**JAMM is a peak finder for NGS datasets (ChIP-Seq, ATAC-Seq, DNase-Seq..etc.) that can integrate replicates and assign peak boundaries accurately. JAMM is applicable to both broad and narrow datasets. Read more [in JAMM's publication](http://bioinformatics.oxfordjournals.org/content/early/2014/09/15/bioinformatics.btu568).** 
 
-Read more [http://bioinformatics.oxfordjournals.org/content/early/2014/09/15/bioinformatics.btu568](in JAMM's publication). JAMM was developed at the [http://ohlerlab.mdc-berlin.net/](Ohler lab) at [http://www.mdc-berlin.de/13800178/en/bimsb](BIMSB-MDC) in Berlin.
+JAMM was developed at the [Ohler lab](http://ohlerlab.mdc-berlin.net/) at [BIMSB-MDC](http://www.mdc-berlin.de/13800178/en/bimsb) in Berlin.
 
 
-If you have questions or need help running JAMM please post to [https://groups.google.com/forum/#!forum/jamm-peak-finder JAMM's Google group], or if you prefer you can email us at [http://www.google.com/recaptcha/mailhide/d?k=01vPijd2GG0LEbZV2NyE_rSA==&c=49GEiFp47dZQV_120clczwxYcP3tQ98VWBJtNl6_dBw= this email].
+If you have questions or need help running JAMM please email us at [this email](http://www.google.com/recaptcha/mailhide/d?k=01vPijd2GG0LEbZV2NyE_rSA==&c=49GEiFp47dZQV_120clczwxYcP3tQ98VWBJtNl6_dBw=), we will be happy to help you.
 
-===News and Updates=== 
-  * Jul 30 2015: *New version of JAMM released (v1.0.7rev2)*. This version has some minor bug fixes and some cryptic errors replaced by user-friendly messages.
-  * Feb 18 2015: *New version of JAMM released (v1.0.7rev1)*. This version introduces clustering model initialization options among other things, optional PCR duplicates filtering and reports the seed used for all randomization/sampling steps.
-  * Jan 14 2015: New questions and answers have been added to the [https://code.google.com/p/jamm-peak-finder/wiki/FAQs FAQs wiki page]. Why does JAMM output a large number of peaks? What is the "filtered" list?...Those questions and more are answered in the [https://code.google.com/p/jamm-peak-finder/wiki/FAQs FAQs wiki page]!
-  * Dec 06 2014: *New version of JAMM released (v1.0.6rev3)*. This version fixes a bug related to bash localization that affects peak score sorting for some users. You can read more in the changelog. 
-  * Nov 25 2014: *New version of JAMM released (v1.0.6rev2)*. This version fixes bugs in the previous released version JAMMv1.0.6rev1, that cause paired-end option to not function.
-  * Nov 11 2014: *New version of JAMM released (v1.0.6rev1)*. This version has two main changes: *NO dependencies on "sqldf" R package*, and _optional_ window fold enrichment cutoff to reduce running time and get only more highly confident peaks.
-  * Nov 11 2014: After a recent R update, certain versions of some R packages are not compatible with certain versions of the "sqldf" R package. This affects all JAMM versions from v1.0.4 until v1.0.6. The error you would get is something like:
+News and Updates
+------
 
-{{{
-unused arguments (comment.char = "", quote = "\"")
-}}}
+* **Jul 30 2015:** *New version of JAMM released (v1.0.7rev2)*. This version has some minor bug fixes and some cryptic errors replaced by user-friendly messages.
 
-Starting v1.0.6rev1, JAMM has NO dependencies on "sqldf" package.
+* **Feb 18 2015:** *New version of JAMM released (v1.0.7rev1)*. This version introduces clustering model initialization options among other things, optional PCR duplicates filtering and reports the seed used for all randomization/sampling steps.
+
+* **Jan 14 2015:** New questions and answers have been added to the [https://code.google.com/p/jamm-peak-finder/wiki/FAQs FAQs wiki page]. Why does JAMM output a large number of peaks? What is the "filtered" list?...Those questions and more are answered in the [https://code.google.com/p/jamm-peak-finder/wiki/FAQs FAQs wiki page]!
+
+* **Dec 06 2014:** *New version of JAMM released (v1.0.6rev3)*. This version fixes a bug related to bash localization that affects peak score sorting for some users. You can read more in the changelog. 
+
+* **Nov 25 2014:** *New version of JAMM released (v1.0.6rev2)*. This version fixes bugs in the previous released version JAMMv1.0.6rev1, that cause paired-end option to not function.
+
+* **Nov 11 2014:** *New version of JAMM released (v1.0.6rev1)*. This version has two main changes: *NO dependencies on "sqldf" R package*, and _optional_ window fold enrichment cutoff to reduce running time and get only more highly confident peaks.
+
+* **Nov 11 2014:** After a recent R update, certain versions of some R packages are not compatible with certain versions of the "sqldf" R package. This affects all JAMM versions from v1.0.4 until v1.0.6. Starting v1.0.6rev1, JAMM has NO dependencies on "sqldf" package.
 
 ===Download JAMM===
 *Current Version:* JAMM v1.0.7rev2 ([https://drive.google.com/file/d/0B8nxBVNVchN9QXl0QzJ3Ql9IRDA/view?usp=sharing Download])
