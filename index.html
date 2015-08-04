@@ -38,29 +38,34 @@
 <p>If you have questions or need help running JAMM please email us at <a href="http://www.google.com/recaptcha/mailhide/d?k=01vPijd2GG0LEbZV2NyE_rSA==&amp;c=49GEiFp47dZQV_120clczwxYcP3tQ98VWBJtNl6_dBw=">this email</a>, we will be happy to help you.</p>
 
 <h2>
-<a id="news-and-updates" class="anchor" href="#news-and-updates" aria-hidden="true"><span class="octicon octicon-link"></span></a>News and Updates</h2>
+<a id="download-jamm" class="anchor" href="#download-jamm" aria-hidden="true"><span class="octicon octicon-link"></span></a>Download JAMM</h2>
+
+<p><strong>The latest JAMM version is <em>JAMMv1.0.7rev2</em>. <a href="https://github.com/mahmoudibrahim/JAMM/archive/v1.0.7.2.zip">Click here to download it</a>.</strong></p>
+
+<p>If you are interested in older versions, check the <a href="https://github.com/mahmoudibrahim/JAMM/wiki/JAMM-Downloads-Archive">Downloads Archive</a> or the <a href="https://github.com/mahmoudibrahim/JAMM/releases">Github release page</a>. </p>
+
+<h2>
+<a id="latest-news-and-updates" class="anchor" href="#latest-news-and-updates" aria-hidden="true"><span class="octicon octicon-link"></span></a>Latest News and Updates</h2>
 
 <ul>
 <li><p><strong>Jul 30 2015:</strong> <em>New version of JAMM released (v1.0.7rev2)</em>. This version has some minor bug fixes and some cryptic errors replaced by user-friendly messages.</p></li>
 <li><p><strong>Feb 18 2015:</strong> <em>New version of JAMM released (v1.0.7rev1)</em>. This version introduces clustering model initialization options among other things, optional PCR duplicates filtering and reports the seed used for all randomization/sampling steps.</p></li>
-<li><p><strong>Jan 14 2015:</strong> New questions and answers have been added to the [<a href="https://code.google.com/p/jamm-peak-finder/wiki/FAQs">https://code.google.com/p/jamm-peak-finder/wiki/FAQs</a> FAQs wiki page]. Why does JAMM output a large number of peaks? What is the "filtered" list?...Those questions and more are answered in the [<a href="https://code.google.com/p/jamm-peak-finder/wiki/FAQs">https://code.google.com/p/jamm-peak-finder/wiki/FAQs</a> FAQs wiki page]!</p></li>
-<li><p><strong>Dec 06 2014:</strong> <em>New version of JAMM released (v1.0.6rev3)</em>. This version fixes a bug related to bash localization that affects peak score sorting for some users. You can read more in the changelog. </p></li>
-<li><p><strong>Nov 25 2014:</strong> <em>New version of JAMM released (v1.0.6rev2)</em>. This version fixes bugs in the previous released version JAMMv1.0.6rev1, that cause paired-end option to not function.</p></li>
-<li><p><strong>Nov 11 2014:</strong> <em>New version of JAMM released (v1.0.6rev1)</em>. This version has two main changes: <em>NO dependencies on "sqldf" R package</em>, and <em>optional</em> window fold enrichment cutoff to reduce running time and get only more highly confident peaks.</p></li>
-<li><p><strong>Nov 11 2014:</strong> After a recent R update, certain versions of some R packages are not compatible with certain versions of the "sqldf" R package. This affects all JAMM versions from v1.0.4 until v1.0.6. Starting v1.0.6rev1, JAMM has NO dependencies on "sqldf" package.</p></li>
 </ul>
+
+<p><em>Visit the <a href="https://github.com/mahmoudibrahim/JAMM/wiki">the Wiki Homepage</a> for older updates and news.</em></p>
 
 <h2>
 <a id="jamm-documentation" class="anchor" href="#jamm-documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>JAMM Documentation</h2>
 
 <ul>
-<li>[Introduction and Installation]</li>
-<li>[How to Use]</li>
-<li>[Frequently Asked Questions]</li>
+<li><a href="https://github.com/mahmoudibrahim/JAMM/wiki/Installing-JAMM">How to Install JAMM</a></li>
+<li><a href="https://github.com/mahmoudibrahim/JAMM/wiki/Usage">How to Use JAMM</a></li>
+<li><a href="https://github.com/mahmoudibrahim/JAMM/wiki/Frequently-Asked-Questions">Frequently Asked Questions</a></li>
+<li><a href="https://github.com/mahmoudibrahim/JAMM/wiki/JAMM-Parameter-Recommendation">Parameter Recommendations</a></li>
 <li>Of course it is always good to read <a href="http://bioinformatics.oxfordjournals.org/content/31/1/48">the actual paper</a> :)</li>
 </ul>
 
-<p>Please check [other Wiki pages] for more information on JAMM. </p>
+<p>Please check <a href="https://github.com/mahmoudibrahim/JAMM/wiki">the Wiki Homepage</a> for more information on JAMM. </p>
 
 <p>If you still have questions or need help running JAMM please email us at <a href="http://www.google.com/recaptcha/mailhide/d?k=01vPijd2GG0LEbZV2NyE_rSA==&amp;c=49GEiFp47dZQV_120clczwxYcP3tQ98VWBJtNl6_dBw=">this email</a>.</p>
 
@@ -74,51 +79,7 @@
 <h2>
 <a id="quick-tutorial" class="anchor" href="#quick-tutorial" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick Tutorial</h2>
 
-<p>Before going ahead with this tutorial, please make sure JAMM is running properly on your machine using the small dataset provided above.</p>
-
-<p>The purpose of this tutorial is to help you get started with running JAMM. The tutorial uses ENCODE (Broad Institute) H3K27ac ChIP-Seq full dataset from HeLa-S3 cells.</p>
-
-<p>It starts with the aligned BED files which we provide here. Those files were generated by aligning reads to hg19 using Bowtie2, followed by PCR duplicates removal using SAMtools. </p>
-
-<p><em>Step 1:</em> Download the <code>H3K27ac</code> ChIP-Seq BED files corresponding to Replicate 1, Replicate 2 and ChIP Input (Warning: Files are big, up to about 4Gb). </p>
-
-<ul>
-<li><p><a href="https://drive.google.com/file/d/0B8nxBVNVchN9c2lQQmZBSXZwQWM/edit?usp=sharing">Replicate 1</a></p></li>
-<li><p><a href="https://drive.google.com/file/d/0B8nxBVNVchN9OUlPQlQwNDRyWkU/edit?usp=sharing">Replicate 2</a></p></li>
-<li><p><a href="https://drive.google.com/file/d/0B8nxBVNVchN9WHpXRTdpY29hNDQ/edit?usp=sharing">ChIP HeLa-S3 Broad Institute Input</a></p></li>
-</ul>
-
-<p><em>Step 2:</em> Download the chromosome size file corresponding to hg19 genome build. This file is needed by JAMM to run.</p>
-
-<ul>
-<li><a href="https://drive.google.com/file/d/0B8nxBVNVchN9SGNsQXlrQTg3UTA/edit?usp=sharing">hg19 chromosome size file</a></li>
-</ul>
-
-<p><em>Step 3:</em> Create the directory structure you need to run JAMM. We recommend you set up a main directory called "<code>H3K27ac</code>" and 2 additional sub-directories called "sample" and "control":</p>
-
-<p>{{{
-mkdir H3K27ac</p>
-
-<p>mkdir H3K27ac/sample</p>
-
-<p>mkdir H3K27ac/ctrl
-}}}</p>
-
-<p><em>Step 4:</em> Copy the Replicate 1 and Replicate 2 BED files to the "<code>H3K27ac</code>/sample" directory. Copy the Input file to the "<code>H2K27ac</code>/ctrl" directory.</p>
-
-<p><em>Step 5:</em> Copy the chromosome size file to the "<code>H3K27ac</code>" directory.</p>
-
-<p><em>Step 6:</em> You are now ready to run JAMM:</p>
-
-<p>{{{
-bash /path/to/JAMM/folder/JAMM.sh -s /path/to/your/"H3K27ac/sample"/folder -g /path/to/your/chromosome/size/file -o /path/to/folder/with/your/main/"H3K27ac"/folder -c /path/to/folder/with/your/"H3K27ac/ctrl"/folder
-}}}</p>
-
-<p><em>Step 7</em>: Check the output. You will have two new folders in your main "<code>H3K27ac</code>" directory. One is called "peaks" containing your peak files and one is called "xcorr" containing results for cross-correlation analysis.</p>
-
-<p><em>We already analyzed this dataset using JAMMv1.0.4 and you can get <a href="Provided%20just%20as%20an%20example,%20not%20to%20be%20used%20directly%20in%20publications">https://drive.google.com/file/d/0B8nxBVNVchN9c01KNFBXMm5VeFE/edit?usp=sharing our results here</a>.</em></p>
-
-<p>More information about JAMM output is provided on the [<a href="https://code.google.com/p/jamm-peak-finder/wiki/Usage">https://code.google.com/p/jamm-peak-finder/wiki/Usage</a> Usage Wiki page]</p>
+<p>On <a href="https://github.com/mahmoudibrahim/JAMM/wiki/Basic-Tutorial">this link</a>, you will find a quick tutorial to show how you can run JAMM on a real dataset.</p>
 
 <h2>
 <a id="how-to-cite-jamm" class="anchor" href="#how-to-cite-jamm" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to Cite JAMM?</h2>
