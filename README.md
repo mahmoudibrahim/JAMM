@@ -11,7 +11,7 @@ If you have questions or need help running JAMM please email us at [this email](
 Download JAMM
 ------
 
-** The latest JAMM version is _JAMMv1.0.7rev2_. [Click here to download it](https://github.com/mahmoudibrahim/JAMM/archive/v1.0.7.2.zip).** 
+**The latest JAMM version is _JAMMv1.0.7rev2_. [Click here to download it](https://github.com/mahmoudibrahim/JAMM/archive/v1.0.7.2.zip).**
 
 If you are interested in older versions, check the [Downloads Archive](https://github.com/mahmoudibrahim/JAMM/wiki/JAMM-Downloads-Archive) or the [Github release page](https://github.com/mahmoudibrahim/JAMM/releases). 
 
