@@ -8,12 +8,15 @@ JAMM was developed at the [Ohler lab](http://ohlerlab.mdc-berlin.net/) at [BIMSB
 If you have questions or need help running JAMM please email us at [this email](http://www.google.com/recaptcha/mailhide/d?k=01vPijd2GG0LEbZV2NyE_rSA==&c=49GEiFp47dZQV_120clczwxYcP3tQ98VWBJtNl6_dBw=), we will be happy to help you.
 
 
+
 Download JAMM
 ------
 
 **The latest JAMM version is _JAMMv1.0.7rev2_. [Click here to download it](https://github.com/mahmoudibrahim/JAMM/archive/v1.0.7.2.zip).**
 
 If you are interested in older versions, check the [Downloads Archive](https://github.com/mahmoudibrahim/JAMM/wiki/JAMM-Downloads-Archive) or the [Github release page](https://github.com/mahmoudibrahim/JAMM/releases). 
+
+
 
 Latest News and Updates
 ------
@@ -23,6 +26,7 @@ Latest News and Updates
 * **Feb 18 2015:** *New version of JAMM released (v1.0.7rev1)*. This version introduces clustering model initialization options among other things, optional PCR duplicates filtering and reports the seed used for all randomization/sampling steps.
 
 _Visit the [the Wiki Homepage](https://github.com/mahmoudibrahim/JAMM/wiki) for older updates and news._
+
 
 
 JAMM Documentation
@@ -38,6 +42,8 @@ Please check [the Wiki Homepage](https://github.com/mahmoudibrahim/JAMM/wiki) fo
 
 If you still have questions or need help running JAMM please email us at [this email](http://www.google.com/recaptcha/mailhide/d?k=01vPijd2GG0LEbZV2NyE_rSA==&c=49GEiFp47dZQV_120clczwxYcP3tQ98VWBJtNl6_dBw=).
 
+
+
 Example Dataset
 ------
 
@@ -46,10 +52,13 @@ Example Dataset
 This dataset is chromosome 21, in K562 CTCF ChIP-Seq from [ENCODE](https://genome.ucsc.edu/ENCODE/).
 
 
+
 Quick Tutorial
 ------
 
 On [this link](https://github.com/mahmoudibrahim/JAMM/wiki/Basic-Tutorial), you will find a quick tutorial to show how you can run JAMM on a real dataset.
+
+
 
 How to Cite JAMM?
 ------
