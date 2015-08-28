@@ -59,6 +59,12 @@ Quick Tutorial
 On [this link](https://github.com/mahmoudibrahim/JAMM/wiki/Basic-Tutorial), you will find a quick tutorial to show how you can run JAMM on a real dataset.
 
 
+Galaxy Wrapper
+------
+JAMM has a Galaxy wrapper which you can get from here: [https://github.com/mahmoudibrahim/JAMMalaxy](https://github.com/mahmoudibrahim/JAMMalaxy)
+
+The Galaxy wrapper was developed by [Clemens Messerschmidt](https://github.com/messersc)
+
 
 How to Cite JAMM?
 ------
