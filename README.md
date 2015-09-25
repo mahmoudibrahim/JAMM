@@ -21,9 +21,9 @@ If you are interested in older versions, check the [Downloads Archive](https://g
 Latest News and Updates
 ------
 
-* **Jul 30 2015:** *New version of JAMM released (v1.0.7rev2)*. This version has some minor bug fixes and some cryptic errors replaced by user-friendly messages.
+* **Sep 25 2015:** Please note that v1.0.7rev2 has a bug that might cause paired-end analysis mode to crash. If you want to set -t paired, please use v1.0.7rev1 until a fix is released. On a different note, there is now a [tutorial on the wiki on how to analyze ATAC-seq data](https://github.com/mahmoudibrahim/JAMM/wiki/How-to-Preprocess-ATAC-seq-Data-for-JAMM).
 
-* **Feb 18 2015:** *New version of JAMM released (v1.0.7rev1)*. This version introduces clustering model initialization options among other things, optional PCR duplicates filtering and reports the seed used for all randomization/sampling steps.
+* **Jul 30 2015:** *New version of JAMM released (v1.0.7rev2)*. This version has some minor bug fixes and some cryptic errors replaced by user-friendly messages.
 
 _Visit the [the Wiki Homepage](https://github.com/mahmoudibrahim/JAMM/wiki) for older updates and news._
 
