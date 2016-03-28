@@ -21,7 +21,7 @@ If you are interested in older versions, check the [Downloads Archive](https://g
 Latest News and Updates
 ------
 
-* **Mar 28 2016:** *New version of JAMM released (v1.0.7rev3)*. This version has some bug fixes with automated threshold calculation that caused it to be very slow and with paired-end handling.
+* **Mar 28 2016:** *New version of JAMM released (v1.0.7rev3)*. This version has some bug fixes with automated threshold calculation that caused it to be very slow and with paired-end handling. Paired-end analysis should now work with this version.
 
 * **Sep 25 2015:** Please note that v1.0.7rev2 has a bug that might cause paired-end analysis mode to crash. If you want to set -t paired, please use v1.0.7rev1 until a fix is released. On a different note, there is now a [tutorial on the wiki on how to analyze ATAC-seq data](https://github.com/mahmoudibrahim/JAMM/wiki/How-to-Preprocess-ATAC-seq-Data-for-JAMM).
 
