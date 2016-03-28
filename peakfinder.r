@@ -1,6 +1,6 @@
 ########################################################################
-# JAMMv1.0.7rev2 is a peak finder for joint analysis of NGS replicates.
-# Copyright (C) 2014-2015  Mahmoud Ibrahim
+# JAMMv1.0.7rev3 is a peak finder for joint analysis of NGS replicates.
+# Copyright (C) 2014-2016  Mahmoud Ibrahim
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -157,17 +157,17 @@ countreadspe = function(bedfile, reads, chromsize, filelist, chrcount) {
 	o = which(filelist == bedfile)
 	
 	
-	if (reads[[o]][length(reads[[o]]),2] > chromsize) {
-		message(paste0(chromName, ", Warning: Read alignments do not match chromosome length, Skipped!"))
+	#if (reads[[o]][length(reads[[o]]),2] > chromsize) {
+	#	message(paste0(chromName, ", Warning: Read alignments do not match chromosome length, Skipped!"))
 		
-		if (chrcount == 1) {
-			message(paste0(chromName, ", ERROR: The first chromosome in the analysis was skipped. I can not calculate normalization factors. You can either delete this chromosome from your chromosome size file or fix the previous warning!"))
-			quit()
-			system("exit 1")
-		} else {
-			quit()
-		}
-	}
+	#	if (chrcount == 1) {
+	#		message(paste0(chromName, ", ERROR: The first chromosome in the analysis was skipped. I can not calculate normalization factors. You can either delete this chromosome from your chromosome size file or fix the previous warning!"))
+	#		quit()
+	#		system("exit 1")
+	#	} else {
+	#		quit()
+	#	}
+	#}
 	
 	counts = vector(mode = "numeric", length = chromsize)
 	for (j in 1:length(reads[[o]][,1])) {
@@ -251,8 +251,7 @@ pickwins = function(winStart, coffeeshopSud, counts, numdup, startlist, winSize)
 
 
 #score windows for fast analysis
-scorewindow = function(winStart, coffeeshopSud, numdup, C, bkgd, counts, startlist) {
-	
+scorewindow = function(winStart, coffeeshopSud, numdup, C, CCC, Cmin, bkgd, counts, startlist) {
 	plz = which(startlist == winStart)
 	winEnd = coffeeshopSud[plz]
 	
@@ -269,16 +268,8 @@ scorewindow = function(winStart, coffeeshopSud, numdup, C, bkgd, counts, startli
 		Rs[,j] = filtfilt(rep(1,80)/80,1,Rsr[,j])
 	}
 	#extract subset of the background
-	if (bkgd != "None") {
-		Cs = counts[[numdup+1]]
-		Cmin = min(Cs[Cs > 0])
-		Cs = Cs[winStart:winEnd]
-		Cs = filtfilt(rep(1,80)/80,1,Cs) + Cmin #gets rid of Inf in the fold change
-	} else {
-		set.seed(samplingSeed)
-		Cs = sample(C, rWinSizeTemp, replace = TRUE)
-		Cs = filtfilt(rep(1,80)/80,1,Cs)
-	}
+	Cs = CCC[winStart:winEnd]
+	Cs = filtfilt(rep(1,80)/80,1,Cs) + Cmin #gets rid of Inf in the fold change
 			
 	#start scoring
 	signal = (geomean(Rs))
@@ -286,6 +277,34 @@ scorewindow = function(winStart, coffeeshopSud, numdup, C, bkgd, counts, startli
 	return(cairo)
 }
 
+
+#score windows for fast analysis
+scorewindowALT = function(winStart, coffeeshopSud, numdup, C, bkgd, counts, startlist) {
+	plz = which(startlist == winStart)
+	winEnd = coffeeshopSud[plz]
+	
+	#will store peak information
+	writethis = list()
+
+	rWinSizeTemp = winEnd - winStart + 1
+	
+	#extract subset of the IP
+	Rs = matrix(nrow = rWinSizeTemp, ncol = numdup)
+	Rsr = Rs
+	for (j in 1:numdup) {
+		Rsr[,j] = counts[[j]][winStart:winEnd]
+		Rs[,j] = filtfilt(rep(1,80)/80,1,Rsr[,j])
+	}
+	#extract subset of the background
+	set.seed(samplingSeed)
+	Cs = sample(C, rWinSizeTemp, replace = TRUE)
+	Cs = filtfilt(rep(1,80)/80,1,Cs)
+			
+	#start scoring
+	signal = (geomean(Rs))
+	cairo = (mean(signal)) / (mean(Cs))
+	return(cairo)
+}
 
 #Initialize MClust clustering parameters
 smoothcounts = function(winStart, coffeeshopSud, numdup, counts, startlist) { #helper function1
@@ -897,7 +916,6 @@ if (coffeeshopSud[length(coffeeshopSud)] > chromSize) {
 	coffeeshopSud[length(coffeeshopSud)] = chromSize
 }
 
-
 if (cornum > 1) {
 	coffeeshop = mclapply(coffeeshopNord, pickwins, coffeeshopSud, counts, numdup, startlist = coffeeshopNord, winSize, mc.cores = cornum, mc.preschedule = presched)
 } else {
@@ -951,13 +969,24 @@ param = initparam(coffeeshopNord, coffeeshopSud, numdup, counts, cornum, clustnu
 # Enriched Window Filtering
 # ==========================
 if (windowe != 1) { #do it only if window fold enrichment filtering is required
-	if (cornum > 1) {
-		scores = mclapply(coffeeshop[,1], scorewindow, coffeeshop[,2], numdup, C, bkgd, counts, startlist = coffeeshop[,1], mc.cores = cornum, mc.preschedule = presched)
+	
+	if (bkgd != "None") {
+		CCC = counts[[numdup+1]]
+		Cmin = min(CCC[CCC > 0])
+		if (cornum > 1) {
+			scores = mclapply(coffeeshop[,1], scorewindow, coffeeshop[,2], numdup, C, CCC, Cmin, bkgd, counts, startlist = coffeeshop[,1], mc.cores = cornum, mc.preschedule = presched)
+		} else {
+			scores = lapply(coffeeshop[,1], scorewindow, coffeeshop[,2], numdup, C, CCC, Cmin, bkgd, counts, startlist = coffeeshop[,1])
+		}
 	} else {
-		scores = lapply(coffeeshop[,1], scorewindow, coffeeshop[,2], numdup, C, bkgd, counts, startlist = coffeeshop[,1])
+		if (cornum > 1) {
+			scores = mclapply(coffeeshop[,1], scorewindowALT, coffeeshop[,2], numdup, C, bkgd, counts, startlist = coffeeshop[,1], mc.cores = cornum, mc.preschedule = presched)
+		} else {
+			scores = lapply(coffeeshop[,1], scorewindowALT, coffeeshop[,2], numdup, C, bkgd, counts, startlist = coffeeshop[,1])
+		}
 	}
+	
 	scores = unlist(scores)
-
 	if (windowe == "auto") {
 		lscores = log(scores)
 		if (length(scores) > 0) {

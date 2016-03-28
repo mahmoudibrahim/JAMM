@@ -1,9 +1,6 @@
 ===================
-Version 1.0.7rev2
+Version 1.0.7rev3
 ===================
 
 - fixed bugs in paired-end handling
-- added an option to set pre-scheduling to FALSE for mclapply
-- some cryptic errors now replaced with warnings or more user-friendly error messages
-- fixed a bug in peakfinder related to finding one enriched window in a chromosome
-- added simple depth normalization option to SignalGenerator.sh
+- fixed bugs in automated threshold that slowed it down when input was present
