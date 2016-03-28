@@ -42,6 +42,7 @@ Please check [the Wiki Homepage](https://github.com/mahmoudibrahim/JAMM/wiki) fo
 
 If you still have questions or need help running JAMM please email us at [this email](http://www.google.com/recaptcha/mailhide/d?k=01vPijd2GG0LEbZV2NyE_rSA==&c=49GEiFp47dZQV_120clczwxYcP3tQ98VWBJtNl6_dBw=).
 
+Note: JAMM produces a large list of peaks on purpose so that you can choose how to threshold it. If you want JAMM to try and automatically threshold it, use "-e auto" option. Read more about this in the [FAQs on the wiki](https://github.com/mahmoudibrahim/JAMM/wiki/Frequently-Asked-Questions).
 
 
 Example Dataset
