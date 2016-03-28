@@ -1,6 +1,6 @@
 ########################################################################
-# JAMMv1.0.7rev3 is a peak finder for joint analysis of NGS replicates.
-# Copyright (C) 2014-2016  Mahmoud Ibrahim
+# JAMMv1.0.7rev2 is a peak finder for joint analysis of NGS replicates.
+# Copyright (C) 2014-2015  Mahmoud Ibrahim
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ sPath="`( cd \"$sPath\" && pwd )`"
 usage()
 {
 cat << EOF
-Welcome to JAMM v1.0.7rev3 (GNU GPLv3). Copyright (C) 2014-2016  Mahmoud Ibrahim.
+Welcome to JAMM v1.0.7rev2 (GNU GPLv3). Copyright (C) 2014-2015  Mahmoud Ibrahim.
 
 This program comes with ABSOLUTELY NO WARRANTY; for details visit http://www.gnu.org/licenses/gpl.html. This is free software, and you are welcome to redistribute it under certain conditions; visit http://www.gnu.org/licenses/gpl.html for details.
 
@@ -143,7 +143,10 @@ if [ $fraglen == "ns" ]; then
 		exit 0
 	fi
 fi
-nreps=$(ls -1 $sdir/*.bed | wc -l) #count how many sample files
+#if [ $bdir != "None" ]; then
+#	nbkgd=$(ls -1 $bdir/*.bam | wc -l) #count how many sample files
+#fi
+nreps=$(ls -1 $sdir/*.bam | wc -l) #count how many sample files
 #no sample files
 if [ $nreps == "0" ]; then
 	echo "No Sample Files Found!"
@@ -169,7 +172,7 @@ mkdir $wdir/bkgd.$ran/ #directory to store background files
 mkdir $wdir/sizes.$ran/ #chromosomes and sizes
 mkdir $wdir/samples.$ran/ #store sample files
 
-dupnum=$(ls -1 $sdir | wc -l) #count how many sample files
+dupnum=$nreps #count how many sample files
 
 
 #separate chromosome sizes
@@ -179,49 +182,56 @@ awk -v ext="$ext" '{ print >> ext"/size." $1 ".bed" }' $gsize
 printf "Done!\n"
 
 
-printf "Processing sample files..."
+###########Not NECESSARY#########################
+#printf "Processing sample files..."
 #load each chromosome from each sample file
-for i in $sdir/*.bed; do
-samplefile=$(basename $i)	
-	for f in $wdir/sizes.$ran/*; do
-		sizefile=$(basename $f)
-		chr=$(echo $sizefile | awk -F"." '{print $2}' | awk -F"." '{print $1}');
-		awk -v chr="$chr" -v ext="$wdir/samples.$ran/" -v samplefile="$samplefile" -F"\t" '$1 == chr { print $2"\t"$6 >> ext"sample."chr"."samplefile }' "$i" 
-	done
-done
-printf "Done!\n"
+#for i in $sdir/*.bam; do
+#samplefile=$(basename $i)	
+#	for f in $wdir/sizes.$ran/*; do
+#		sizefile=$(basename $f)
+#		chr=$(echo $sizefile | awk -F"." '{print $2}' | awk -F"." '{print $1}');
+#		awk -v chr="$chr" -v ext="$wdir/samples.$ran/" -v samplefile="$samplefile" -F"\t" '$1 == chr { print $2"\t"$6 >> ext"sample."chr"."samplefile }' "$i" 
+#	done
+#done
+#printf "Done!\n"
+#################################################
 
 
-if [ $bdir != "None" ]; then
+###############Not necessary#####################
+#if [ $bdir != "None" ]; then
 #concatenate all background files into one file
-printf "Processing control files..."
-cat $bdir/*.bed > $wdir/bkgd.$ran/ctrl.bed
+#printf "Processing control files..."
+#cat $bdir/*.bed > $wdir/bkgd.$ran/ctrl.bed   ###########this needs to be done inside peakfinder.r!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!###################
 
-for f in $wdir/sizes.$ran/*; do
-	sizefile=$(basename $f)
-	chr=$(echo $sizefile | awk -F"." '{print $2}' | awk -F"." '{print $1}');
-	awk -v chr="$chr" -v ext="$wdir/bkgd.$ran/" -F"\t" '$1 == chr { print $2"\t"$6 >> ext"bkgd."chr".ctrl.bed" }' "$wdir/bkgd.$ran/ctrl.bed"
-done
+#for f in $wdir/sizes.$ran/*; do
+#	sizefile=$(basename $f)
+#	chr=$(echo $sizefile | awk -F"." '{print $2}' | awk -F"." '{print $1}');
+#	awk -v chr="$chr" -v ext="$wdir/bkgd.$ran/" -F"\t" '$1 == chr { print $2"\t"$6 >> ext"bkgd."chr".ctrl.bed" }' "$wdir/bkgd.$ran/ctrl.bed"
+#done
 
-printf "Done!\n"
-fi
+#printf "Done!\n"
+#fi
+#################################################
 
+
+####################not needed!!########################
 #determine average read lengths
-printf "Getting average read lengths...\n"
-readL=""
-if [ $bdir != "None" ]; then
-	readC=$(awk '{a=$3-$2;print a;}' "$wdir/bkgd.$ran/ctrl.bed" | perl -lane '$a+=$_;END{print $a/$.}' | awk '{a=$1+0.5;print a;}' | cut -d"." -f1)
-	printf "Control: $readC\n"
-fi
-readL=""
-for s in $sdir/*.bed; do #and for each sample file
-	file=$(basename $s)
-	samplefile=$(echo $file | awk -F"." '{print $1}');	
-	read=$(awk '{a=$3-$2;print a;}' "$s" | perl -lane '$a+=$_;END{print $a/$.}' | awk '{a=$1+0.5;print a;}' | cut -d"." -f1)
-	printf "$samplefile: $read\n"
-	readL="$readL,$read"
-done
-readL=${readL#","}
+#printf "Getting average read lengths...\n"
+#readL=""
+#if [ $bdir != "None" ]; then
+#	readC=$(awk '{a=$3-$2;print a;}' "$wdir/bkgd.$ran/ctrl.bed" | perl -lane '$a+=$_;END{print $a/$.}' | awk '{a=$1+0.5;print a;}' | cut -d"." -f1)
+#	printf "Control: $readC\n"
+#fi
+#readL=""
+#for s in $sdir/*.bed; do #and for each sample file
+#	file=$(basename $s)
+#	samplefile=$(echo $file | awk -F"." '{print $1}');	
+#	read=$(awk '{a=$3-$2;print a;}' "$s" | perl -lane '$a+=$_;END{print $a/$.}' | awk '{a=$1+0.5;print a;}' | cut -d"." -f1)
+#	printf "$samplefile: $read\n"
+#	readL="$readL,$read"
+#done
+#readL=${readL#","}
+#############################################################
 #=======================> DONE!
 
 
@@ -242,43 +252,44 @@ if [ $fraglen == "ns" ]; then
 	printf "Calculating Fragment Length(s)...\n"
 	for f in $wdir/sizes.$ran/*; do #for each chromosome
 		samplelist=""
-		readlist=""
+		#readlist="" not needed!!
 		sizefile=$(basename $f)
 		chr=$(echo $sizefile | awk -F"." '{print $2}' | awk -F"." '{print $1}');
 		
 		#list of sample bed files and read lengths
-		for s in $wdir/samples.$ran/*.bed; do #and for each sample file
+		for s in $sdir/*.bam; do #and for each sample file
 			samplefile=$(basename $s)
 			chr2=$(echo $samplefile | awk -F"." '{print $2}');
 			if [ $chr == $chr2 ] #belonging to this chromosome
 			then
-				samplelist="$samplelist,$wdir/samples.$ran/$samplefile"
+				samplelist="$samplelist,$sdir/$samplefile"
 			fi
 		done
-		readlist="$readL"
+		#readlist="$readL" NOT needed!!
 		
 		#list of control bed files and read lengths
 		if [ $bdir != "None" ]; then
-			for s in $wdir/bkgd.$ran/*.bed; do #and for each sample file
+			for s in $bdir/*.bam; do #and for each sample file
 				samplefile=$(basename $s)
 				chr2=$(echo $samplefile | awk -F"." '{print $2}');
 				if [ $chr == $chr2 ] #belonging to this chromosome
 				then
-					samplelist="$samplelist,$wdir/bkgd.$ran/$samplefile"
-					readlist="$readL,$readC"
+					samplelist="$samplelist,$bdir/$samplefile"
+					#readlist="$readL,$readC" Not needed
 				fi
-			done		
+			done
 		fi
 		
 		#remove leading comma
 		samplelist=${samplelist#","}
 		
-		#call R script for xcorr calculation
-		Rscript "$sPath/xcorr.r" -s="$wdir/sizes.$ran/size.$chr.bed" -ibed="$samplelist" -rl="$readlist" -d="$wdir/stats.$ran" -p="$cores" -nreps="$nreps" -bkgd="$bdir"
+		##################@Anika you might need to change this#########################
+		#call R script for xcorr calculation 
+		Rscript "$sPath/xcorr.r" -s="$wdir/sizes.$ran/size.$chr.bed" -ibam="$samplelist" -d="$wdir/stats.$ran" -p="$cores" -nreps="$nreps" -bkgd="$bdir"
 	done
 
 	#report xcorr results (samples)
-	for f in $sdir/*.bed; do
+	for f in $sdir/*.bam; do
 		file=$(basename $f)
 		samplefile=$(echo $file | awk -F"." '{print $1}');	
 		mkdir "$out/xcorr/$samplefile" #final xcorr results
@@ -299,7 +310,7 @@ if [ $fraglen == "ns" ]; then
 fi
 fi
 
-#paired-end
+############paired-end----right now doesn't work?#######################################
 if [ $type == "paired" ]; then
 	printf "Getting Average Fragment Length(s)...\n"
 	mkdir $out/xcorr #final xcorr results

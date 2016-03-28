@@ -1,6 +1,6 @@
 ########################################################################
-# JAMMv1.0.7rev2 is a peak finder for joint analysis of NGS replicates.
-# Copyright (C) 2014-2015  Mahmoud Ibrahim
+# JAMMv1.0.7rev3 is a peak finder for joint analysis of NGS replicates.
+# Copyright (C) 2014-2016  Mahmoud Ibrahim
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
