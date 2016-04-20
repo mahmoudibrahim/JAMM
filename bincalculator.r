@@ -123,6 +123,7 @@ shimazaki = function(bamfile, indexfile, rl, bins, maxIter, filelist, maxChr, ma
 	}
   
   alsm <- NA; alsp <- NA
+  rm(ameirah,genomevec,alsm,alsp);gc()
   index = which.min(costs)
   finbin = bins[index]
 	
@@ -162,6 +163,7 @@ processChromosomesInFile <- function(bamfile, indexfile, chromosomeinfo, mc.core
   rl <- calculateAverageReadLength(store)
   maxc <- calculateMaxChrom(countlist)
   countlist <- NA
+  rm(countlist);gc()
   #return(round(store[[2]]/store[[1]]))
   return(list(rl,maxc))
 }
@@ -391,5 +393,5 @@ bins = min(unlist(bins))
 write(paste0(bins), file = paste0(storeFile, "/binsize.txt"))
 print(paste("storefile is",storeFile,"/binsize.txt"))
 #message(bins)
-message(paste0("Binsize: "bins", largest chromosome ",maxChr))
+message(paste0("Binsize: ",bins,", largest chromosome ",maxChr))
 #=======================> DONE!

@@ -377,9 +377,11 @@ countup <- function (bamfile, indexfile, filelist, cornum, presched, rmduplicate
     alsm <- NA
     alsp <- NA
     curnum=curnum+1
+    gc()
     #bamfile <- NA
   }
   #close(bamfile)
+  rm(alsm,alsp,curvector,readstarts);gc()
   return (countlist)
 }
 
@@ -435,6 +437,7 @@ if(numbkgd!=0)
   datainf = mclapply(ifrgd, countup, indexfile=ifrgdindex, filelist = ibam, cornum = cornum, presched = presched,RCV=as.character(areinbkgd))
   datain = c(datainf,datain)
   #print(length(datain))
+  rm(datainf);gc()
 } else {
   datain = mclapply(ibam, countup, indexfile=iindex, filelist = ibam, cornum = cornum, presched = presched, RCV=ReadChromVector)
 }
@@ -486,6 +489,10 @@ if(numdup-nreps > 0)
   }
 }
 
+print(paste("size allocated countlist",object.size(countlist)))
+print(paste("size allocated alsm",object.size(alsm)))
+print(paste("size allocated alsp",object.size(alsp)))
+print(paste("size allocated datain",object.size(datain)))
 
 cat("\n","Starting xcorr calculation: ",nreps," files")
 for (i in 1:nreps)
@@ -542,7 +549,7 @@ for (i in 1:length(xcorr)) {
   
 }
 rm(datain)
-rm(xcorr)
+rm(xcorr);gc()
 #=======================> DONE!
 
 

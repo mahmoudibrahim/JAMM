@@ -401,11 +401,12 @@ countreads = function(bamfile, index, reads, frag, chromsize, filelist, chrcount
 	#		quit()
 	#	}
 	#}
+  cat("\n", "peakfinder: Counting",bamfile)
   if (o > length(frag))
   {
-    ReadLength <- frag[length(frag)]
+    FragLength <- frag[length(frag)]
   } else {
-    ReadLength <- frag[o]
+    FragLength <- frag[o]
   }
 	
   als <- NA
@@ -418,9 +419,16 @@ countreads = function(bamfile, index, reads, frag, chromsize, filelist, chrcount
   countlist <- makeCountList(seqnames(seqinfo(bamfile)),chromName,chromSize,RCV)
   chromnames <- names(countlist)
   starting=TRUE
+  curnum <- 1
   for (element in chromnames)
   {
-    print(paste("Counting",element))
+    if(curnum == 1) {
+      cat("\n","Counting:",length(chromnames),"elements","\n")
+      cat(paste0(element,", ",curnum,"; "))
+    } else {
+      cat(paste0(element,", ",curnum,"; "))
+    }
+    #print(paste("Counting",element))
     #chromlength <- length(countlist[[element]])
     chromlength <- as.integer(countlist[[element]])
     
@@ -441,6 +449,7 @@ countreads = function(bamfile, index, reads, frag, chromsize, filelist, chrcount
       }
     }
     rm(alsover)
+    gc()
     if (!length(als))
     { 
       #return(NULL)
@@ -451,7 +460,8 @@ countreads = function(bamfile, index, reads, frag, chromsize, filelist, chrcount
     als <- GRanges(als)
     #extends/truncates reads to user specified length and deletes the ones that don't match chromosome size anymore
     #####do a custom frag in JAMMbam.sh and set ReadLength to it
-    als <- resize(als, ReadLength)
+    als <- resize(als, FragLength)
+    #print(paste("FragLength is",FragLength))
     starts<-start(ranges(als));ends<-end(ranges(als));seqnames<-as.character(seqnames(als));strands<-as.character(strand(als))
     als <- mapply(removeOutOfRangeReads,starts,ends,seqnames,strands,chromlength)
     unl <- unlist(als)
@@ -462,17 +472,25 @@ countreads = function(bamfile, index, reads, frag, chromsize, filelist, chrcount
       als <- unique(als)
     }
     #calculate the number of reads on each position
+    #starts <- NA; ends <- NA; seqnames <- NA; strands <- NA
+    rm(starts,ends,seqnames,strands)
+    gc()
     cov <- coverage(als)
     curcov <- cov[element]
     curcov <- as(curcov, "GRanges")
     values <- score(curcov)
     st <- start(ranges(curcov))
     en <- end(ranges(curcov))
+    rm(curcov,cov)
+    gc()
     #decompress counts to a chromosome size long vector
     reslist <- mapply(makeVectors,st,en,values,SIMPLIFY=FALSE)
     curvector <- unlist(reslist)
     #normalize the read counts
-    
+    rm(reslist,st,en)
+    gc()
+    #reslist <- NA
+    #st <- NA; en <- NA
     #curvector <- curvector/mean(curvector)
     
     
@@ -496,10 +514,14 @@ countreads = function(bamfile, index, reads, frag, chromsize, filelist, chrcount
     }
     
     
-    
     countlist[[element]] <- curvector
-    als <- NA
+    rm(als,curvector)
+    gc()
+    gc()
+    #als <- NA
     starting <- FALSE
+    #curvector <- NA
+    curnum=curnum+1
   }
   return (countlist)
   
