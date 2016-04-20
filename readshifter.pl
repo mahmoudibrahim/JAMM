@@ -1,6 +1,6 @@
 ########################################################################
-# JAMMv1.0.7rev3 is a peak finder for joint analysis of NGS replicates.
-# Copyright (C) 2014-2016  Mahmoud Ibrahim
+# JAMMv1.0.7rev2 is a peak finder for joint analysis of NGS replicates.
+# Copyright (C) 2014-2015  Mahmoud Ibrahim
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -46,10 +46,18 @@ $read_length = $ARGV[2]; #read length
 # ========================================
 
 #open the file
+#####
 open(DATA, $bed_file) || die("Can't open the bed file, probably you gave me the wrong path!");
+#open(DATA, "+>>" , $bed_file) || die("Can't open the bed file, probably you gave me the wrong path!");
+#$bla = length(DATA);
+#print "Hi";
+#print "read count three.8 $bla\n";
+
+
 
 #loop through the rest of the file line by line (To do: look for a faster way)
 while (<DATA>) {
+
     my ($start, $strand) = split(/\t/,$_,2);
     $strand =~ s/\015?\012?$//;
 
@@ -57,11 +65,15 @@ while (<DATA>) {
     
 	#plus strand
 	if ($strand eq '+') {
-		#do nothing
+    #do nothing
+    #####
+    #$start = $start + 1;
 	}
 	#minus strand
 	elsif ($strand eq '-') {
-		$start = $start - $shift_size + $read_length; #difference between $start and $end should be equal to fragment length ($shift_size)
+    #####
+    $start = $start - $shift_size + $read_length + 1;
+		#$start = $start - $shift_size + $read_length; #difference between $start and $end should be equal to fragment length ($shift_size)
 	}
 	#bad format 
 	else {
@@ -72,4 +84,8 @@ while (<DATA>) {
 		say join "\t", $start, $strand;
 	}
 }
+
+#####
+close(DATA);
+
 #=======================> DONE! 
