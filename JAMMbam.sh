@@ -258,7 +258,7 @@ if [ $fraglen == "ns" ]; then
 		#readlist="" not needed!!
 		#sizefile=$(basename $f)
     sizefile=$gsize
-    echo "sizefile " $sizefile
+    #echo "sizefile " $sizefile
 		#chr=$(echo $sizefile | awk -F"." '{print $2}' | awk -F"." '{print $1}');
 		
 		#list of sample bed files and read lengths
@@ -329,6 +329,7 @@ if [ $fraglen == "ns" ]; then
 	#done
 
 	#report xcorr results (samples)
+  readl=""
 	for f in $sdir/*.bam; do
     #echo "starting loop"
 		file=$(basename $f)
@@ -340,8 +341,22 @@ if [ $fraglen == "ns" ]; then
       #echo "is"
 			cp $wdir/stats.$ran/xc.$samplefile.tab $out/xcorr/$samplefile/shifts.txt	
 		fi
+    readlfile="$wdir/stats.$ran/xc.rl.$samplefile.tab"
+    #echo "readlfile is $wdir/stats.$ran/xc.rl.$samplefile.tab"
+    
+    if [ -f "$readlfile" ]; then
+      #echo "readfile is there"
+      while IFS='' read -r line || [[ -n "$line" ]]; do
+        #readlen=$(echo $line | awk -F"," '{print $2}');
+        #readl="$readl,$readlen";
+        readl="$readl,$line"
+      done < "$readlfile"
+    fi
+    
 		Rscript "$sPath/xcorrhelper.r" -infile="$out/xcorr/$samplefile/shifts.txt" -out="$out/xcorr/$samplefile"
 	done
+  readl=${readl#","}
+  #echo "readl is $readl"
 	#report xcorr results (control)
 	if [ $bdir != "None" ]; then
     #echo "not none"
@@ -422,7 +437,7 @@ if [ $binsize == "ns" ]; then
 #			samplefilename=$(echo $samplefile | cut -d'.' -f 3-)
       samplename=$(echo -n $samplefile | head -c -4);
 			samplelist="$samplelist,$sdir/$samplefile"
-      echo "samplelist $samplelist fraglen $fraglen indexlist $indexlist"
+#     echo "samplelist $samplelist fraglen $fraglen indexlist $indexlist"
 
 			if [ $fraglen == "ns" ]; then
 				shift=$(awk -F":" '$1 == "Fragment Length" { print $2 }' "$out/xcorr/$samplename/xcorrsummary.txt")
@@ -434,8 +449,8 @@ if [ $binsize == "ns" ]; then
 	samplelist=${samplelist#","}
   indexlist=${indexlist#","}
 	frag=${frag#","}
-  echo "frag $frag readL $readL"
-	Rscript "$sPath/bincalculator.r" -ibam="$samplelist" -iindex="$indexlist" -s="$gsize" -rl="$readL" -d="$wdir" -p="$cores" -f="$frag" -type="$type" -nreps="$nreps"
+# echo "frag $frag readL $readL"
+	Rscript "$sPath/bincalculator.r" -ibam="$samplelist" -iindex="$indexlist" -s="$gsize" -rl="$readL" -d="$wdir" -p="$cores" -f="$frag" -type="$type" -nreps="$nreps" -readl="$readl"
 fi
 if [ $binsize != "ns" ]; then
 	printf "You set a Bin Size: $binsize \n"

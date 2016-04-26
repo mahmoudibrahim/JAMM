@@ -66,158 +66,6 @@ suppressPackageStartupMessages(library("GenomicRanges"))
 # ================= 
 # Custom Functions
 # =================
-
-
-Jamm.prep <- function(BamFileOrPath, ChromSizesFilePathOrDataFrame, ReadChromVector=NULL, kpduplicates=FALSE, ReadLength)
-{
-  #what if the BamFileOrPath is neither Bamfile nor path?
-  #first argument may be a BamFile or the path to it
-  #second argument may be a data frame of chromosome sizes or a path to a file with sizes data
-  #third argument may be a character vector specifying which chromosomes should be read in, in general
-  #it is possible to write chr1, 1 or seq1 in upper or lower case
-  #or it may be a binary vector corresponding in its order to the entered chromosome sizes, 1 for 
-  #read, 0 for don't read. When no argument is supplied, all chromosomes are read in.
-  #the fourth argument specifies the length the reads should be unified to
-  
-  !ReadLength<0 || stop("Negative read length entered")
-  if(identical(class(BamFileOrPath),"character")) {BamFile <- BamFile(BamFileOrPath)}
-  else {BamFile <- BamFileOrPath}
-  if(identical(class(ChromSizesFilePathOrDataFrame),"character")) 
-  {
-    ChromSizes <- read.table(ChromSizesFilePathOrDataFrame)  
-  }
-  else if (identical(class(ChromSizesFilePathOrDataFrame),"data.frame"))
-  {
-    ChromSizes <- ChromSizesFilePathOrDataFrame
-  }
-  else {
-    stop("Please use a data frame or a file for supplying chromosome sizes")
-  }
-  
-  if(is.null(ReadChromVector))
-  {
-    ReadChromVector <- rep(1, times=length(ChromSizes[[1]]))
-  }
-  
-  makeCountList <- function(actlevels, userlevels, userlevellength, binchromv)
-  {
-    #######throw warning messages for that
-    countlist <- list()
-    userlevels <- tolower(userlevels)
-    userlevels <- gsub("chr","",userlevels)
-    userlevels <- gsub("seq","",userlevels)
-    if(identical(class(binchromv),"character")) 
-    {
-      chromv <- tolower(binchromv)
-      chromv <- gsub("chr","",chromv)
-      chromv <- gsub("seq","",chromv)
-      st <- match(userlevels,chromv)
-      for(i in 1:length(st))
-      {
-        if(is.na(st[[i]])) {binchromv[[i]] <- 0} 
-        else {binchromv[[i]] <- 1}
-      }
-    }
-    tempactlevels <- tolower(actlevels)
-    tempactlevels <- gsub("chr","",tempactlevels)
-    tempactlevels <- gsub("seq","",tempactlevels)
-    temp <- match(userlevels,tempactlevels)
-    temp2 <- match(tempactlevels,userlevels)
-    #false if 1)what's in the file is provided and what's provided is in the file (or more)
-    if (any(is.na(temp)))
-    {
-      actlevels <- actlevels[which(!is.na(temp2))]
-      #what's in the file is provided, but there's more provided, so remove the unnecessary information
-      userlevels <- userlevels[which(!is.na(temp))]
-      binchromv <- binchromv[which(!is.na(temp))]
-      userlevellength <- userlevellength[which(!is.na(temp))]
-      temp <- Filter(Negate(function(x) is.na(unlist(x))), temp)
-      warning("There are less chromosomes in the bam file than the sizes file indicates")
-      
-    }
-    newbinchromv <- binchromv[order(temp)]
-    newuserlevellength <- userlevellength[order(temp)]
-    actlevels <- actlevels[which(newbinchromv==1)]
-    newuserlevellength <- newuserlevellength[which(newbinchromv==1)]
-    #length(countlist) <<- length(actlevels)
-    #names(countlist) <<- actlevels
-    length(countlist) <- length(actlevels)
-    names(countlist) <- actlevels
-    for (i in 1:length(actlevels))
-    {
-      countlist[[actlevels[[i]]]] <- newuserlevellength[[i]]
-    }
-    #mapply(fillWithZeros,actlevels,newuserlevellength)
-    #return()
-    return(countlist)
-  }
-  
-  fillWithZeros <- function(chromname,chromlength)
-  {
-    #countlist[[chromname]] <<- rep(0, times=chromlength)
-    #length(countlist[[chromname]]) <<- chromlength
-    #countlist[[chromname]] <<- chromlength
-    countlist[[chromname]] <- chromlength
-    #return()
-    return(countlist)
-  }
-  
-  makeVectors <- function(start,end,value)
-  {
-    return(c(rep(value,times=end-start+1)))
-  }
-  
-  removeOutOfRangeReads <- function(start,end,seqname,strand,chromlength)
-  {
-    if (start>0 && end<=chromlength) 
-    { 
-      output <- list(start,end,seqname,strand)
-      return (output) 
-    }
-  }
-  
-  param <- ScanBamParam()
-  countlist <- list()
-  #creates a list for all chromosomes to call peaks at
-  #makeCountList(seqnames(seqinfo(BamFile)),as.character(ChromSizes[[1]]),as.integer(ChromSizes[[2]]),ReadChromVector)
-  countlist <- makeCountList(seqnames(seqinfo(BamFile)),as.character(ChromSizes[[1]]),as.integer(ChromSizes[[2]]),ReadChromVector)
-  chromnames <- names(countlist)
-  for (element in chromnames)
-  {
-    #chromlength <- length(countlist[[element]])
-    chromlength <- as.integer(countlist[[element]])
-    als <- readGAlignments(BamFile,param=ScanBamParam(which=GRanges(element, IRanges(1,chromlength))))
-    als <- GRanges(als)
-    #extends/truncates reads to user specified length and deletes the ones that don't match chromosome size anymore
-    als <- resize(als, ReadLength)
-    starts<-start(ranges(als));ends<-end(ranges(als));seqnames<-as.character(seqnames(als));strands<-as.character(strand(als))
-    als <- mapply(removeOutOfRangeReads,starts,ends,seqnames,strands,chromlength)
-    unl <- unlist(als)
-    #####fragmentlength
-    starts <- as.integer(unl[c(TRUE,FALSE,FALSE,FALSE)]);ends <- as.integer(unl[c(FALSE,TRUE,FALSE,FALSE)])
-    seqnames <- as.character(unl[c(FALSE,FALSE,TRUE,FALSE)]);strands <- as.character(unl[c(FALSE,FALSE,FALSE,TRUE)])
-    als <- GRanges(seqnames=Rle(seqnames),strand=Rle(strands),ranges=IRanges(start=starts,end=ends))
-    if (!kpduplicates) {
-      als <- unique(als)
-    }
-    #calculate the number of reads on each position
-    cov <- coverage(als)
-    curcov <- cov[element]
-    curcov <- as(curcov, "GRanges")
-    values <- score(curcov)
-    st <- start(ranges(curcov))
-    en <- end(ranges(curcov))
-    #decompress counts to a chromosome size long vector
-    reslist <- mapply(makeVectors,st,en,values,SIMPLIFY=FALSE)
-    curvector <- unlist(reslist)
-    #normalize the read counts
-    curvector <- curvector/mean(curvector)
-    countlist[[element]] <- curvector
-  }
-  return (countlist)
-}
-
-
 makeCountList <- function(actlevels, userlevels, userlevellength, binchromv)
 {
   countlist <- list()
@@ -236,7 +84,6 @@ makeCountList <- function(actlevels, userlevels, userlevellength, binchromv)
       else {binchromv[[i]] <- 1}
     }
   }
-  #binchromv <- rep(1, times=length(actlevels))
   tempactlevels <- tolower(actlevels)
   tempactlevels <- gsub("chr","",tempactlevels)
   tempactlevels <- gsub("seq","",tempactlevels)
@@ -260,9 +107,6 @@ makeCountList <- function(actlevels, userlevels, userlevellength, binchromv)
   
   actlevels <- actlevels[which(newbinchromv==1)]
   newuserlevellength <- newuserlevellength[which(newbinchromv==1)]
-  #print(actlevels)
-  #length(countlist) <<- length(actlevels)
-  #names(countlist) <<- actlevels
   length(countlist) <- length(actlevels)
   names(countlist) <- actlevels
   for (i in 1:length(actlevels))
@@ -318,9 +162,6 @@ callCountReads <- function(cornum,type,bamfiles,index,reads,frag,chromsize,filel
 }
 
 
-#####read in the fragment lengths to unify to
-#####concatenate background/add the counts
-#####only analyse chromosomes that are in the background
 
 
 #Get per-row Geometric mean (takes list, returns vectors, not lists!)
@@ -364,7 +205,6 @@ return(mat)
 #Read in bed(st2) file
 parsein = function(bedfile) {
   l = read.table(bedfile, header = FALSE)[[1]]
-  #####why?
 	l = l + 1
 	return(l)
 }
@@ -382,14 +222,14 @@ parseinpe = function(bedfile) {
 countreads = function(bamfile, index, reads, frag, chromsize, filelist, chrcount, kpduplicates, RCV=ReadChromVector) {
 	
   #####
-  print(paste("filelist",filelist))
-  print(paste("bamfile",bamfile))
-  print(paste("chrcount",chrcount))
-  print(paste("frag",frag))
+  #print(paste("filelist",filelist))
+  #print(paste("bamfile",bamfile))
+  #print(paste("chrcount",chrcount))
+  #print(paste("frag",frag))
   
   #o ist die Nummer des Chromosoms
 	o = which(filelist == bamfile)
-	print(paste("o",o,class(o)))
+	#print(paste("o",o,class(o)))
   
 	#if (reads[[o]][length(reads[[o]])] > chromsize) {
 	#	message(paste0(chromName, ", Warning: Read alignments do not match chromosome length, Skipped!"))
@@ -459,7 +299,6 @@ countreads = function(bamfile, index, reads, frag, chromsize, filelist, chrcount
     }
     als <- GRanges(als)
     #extends/truncates reads to user specified length and deletes the ones that don't match chromosome size anymore
-    #####do a custom frag in JAMMbam.sh and set ReadLength to it
     als <- resize(als, FragLength)
     #print(paste("FragLength is",FragLength))
     starts<-start(ranges(als));ends<-end(ranges(als));seqnames<-as.character(seqnames(als));strands<-as.character(strand(als))
@@ -1149,8 +988,6 @@ for (each.arg in args) {
 	}
 	
 }
-#####take care of uniqueness
-#####add up counts in bkgd
 
 
 
@@ -1161,7 +998,7 @@ chromSize = as.numeric(chromosomes$V2); #chromosomes size
 rm(chromosomes)
 ReadChromVector <- chromName
 iindex = strsplit(iindex, ",", fixed = TRUE)[[1]]
-print(paste("iindex",iindex))
+#print(paste("iindex",iindex))
 
 #if (chrcount == 1) {
 #	write(paste(samplingSeed), file = paste0(out, "/seed.info"))
@@ -1174,14 +1011,13 @@ numdup = length(readsFiles) #number of replicates
 #if (numdup != nreps) {
 if (numdup != nreps+nbkgd) {
   print(paste("numdup, Anzahl der samplefiles:",numdup,"nreps:",nreps))
-  print("Message is thrown here")
 	message("No reads found in one or more replicates!")
 	quit()
 }
 #if (bkgd != "None") {
 #	readsFiles[[numdup+1]] = bkgd
 #}
-#####do I have to concatenate counts again?
+
 winSize = as.numeric(winSize)
 binSize = as.numeric(binsize)
 winSize = binSize * winSize
@@ -1249,16 +1085,16 @@ bins = seq2(from = 1, to = (chromSize - 1), by = binSize)
 # Counting Reads
 # ===============
 
-#####only those that are in the bkgd?
+
 
 areinbkgd <- c()
 
 if(nbkgd!=0)
 {
   ibkgd <- readsFiles[(length(readsFiles)-nbkgd+1):length(readsFiles)]
-  print(paste("ibkgd",ibkgd))
+  #print(paste("ibkgd",ibkgd))
   ibkgdindex <- iindex[(length(iindex)-nbkgd+1):length(iindex)]
-  print(paste("length iindex",length(iindex)))
+  #print(paste("length iindex",length(iindex)))
   counts=callCountReads(cornum,type,bamfiles=ibkgd,index=ibkgdindex,reads=datain,frag=frags,chromsize=chromSize,filelist=readsFiles,chrcount=chrcount,kpduplicates=uniq,RCV=ReadChromVector)
   if(!length(counts[[1]])){
     quit()
@@ -1267,10 +1103,10 @@ if(nbkgd!=0)
   {
     areinbkgd <- unique(c(areinbkgd,names(counts[[i]])))
   }
-  print(paste("areinbkgd",areinbkgd))
+  #print(paste("areinbkgd",areinbkgd))
   #areinbkgd <- names(counts[[1]])
   ifrgd <- readsFiles[1:(length(readsFiles)-nbkgd)]
-  print(paste("length iindex",length(iindex)))
+  #print(paste("length iindex",length(iindex)))
   ifrgdindex <- iindex[1:(length(iindex)-nbkgd)]
   countsf=callCountReads(cornum,type,bamfiles=ifrgd,index=ifrgdindex,reads=datain,frag=frags,chromsize=chromSize,filelist=readsFiles,chrcount=chrcount,kpduplicates=uniq,RCV=as.character(areinbkgd))
   #countsf = mclapply(ifrgd, countup, indexfile=ifrgdindex, filelist = ifrgd, cornum = cornum, presched = presched,RCV=as.character(areinbkgd))
@@ -1318,14 +1154,14 @@ if(nbkgd > 1)
 }
 
 #print(names(counts[[3]]))
-print(class(counts))
+#print(class(counts))
 #print(counts)
-print(names(counts))
-print(length(counts))
-print(length(counts[[1]]))
+#print(names(counts))
+#print(length(counts))
+#print(length(counts[[1]]))
 #counts2 <- counts[[1]]
 
-##### maybe trim doesn't what it should
+
 #counts <- Jamm.prep(BamFile,ChromSizes,ReadChromVector,ReadLength=ReadLength)[["chrY"]]
 #counts3 <- counts
 #print(length(counts3))
@@ -1356,7 +1192,6 @@ print(length(counts[[1]]))
 
 numdup=nreps
 rm(datain)
-print("Hier gehts noch vorbei")
 
 #=======================> DONE!
 
@@ -1445,7 +1280,7 @@ for (element in chrs)
       dCs = sd(snow)
     }
   }
-  print("Hier auch")
+  print("estimated background model")
   #=======================> DONE!
   
   
