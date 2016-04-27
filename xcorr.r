@@ -409,6 +409,12 @@ countup <- function (bamfile, indexfile, filelist, cornum, presched, rmduplicate
       message(paste0(element, ", Warning: Read alignments do not match chromosome length, Skipped!"))
       quit()
     }
+    
+    ################COMMENT FROM MAHMOUD###########
+    ##the function "xc" can be run here directly without ever constructing this huge "countlist" variable.
+    ##I think this is what's causing the memory issues and not "curvector"
+    ##In this case the function "countup" would actually return the results from the function "xc" directly
+    ###############################################
     #countlist[[element]] <<- curvector
     countlist[[element]] <- curvector
     #print(head(countlist[[element]][["+"]]))
@@ -419,6 +425,10 @@ countup <- function (bamfile, indexfile, filelist, cornum, presched, rmduplicate
     #gc()
     #bamfile <- NA
   }
+  
+    ################COMMENT FROM MAHMOUD###########
+    ##what does this if statement do?
+    ###############################################
   if(calcreadlen){
     rl <- calculateAverageReadLength(store)
     #print(rl)
