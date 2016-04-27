@@ -228,6 +228,9 @@ countreads = function(bamfile, index, reads, frag, chromsize, filelist, chrcount
   #print(paste("frag",frag))
   
   #o ist die Nummer des Chromosoms
+  ###########COMMENT FROM MAHMOUD################
+  ## In my implementation, o was not the chromosome, it was which replicate. Just pointing it out in case you didn't set it up here on purpose
+  ###############################################
 	o = which(filelist == bamfile)
 	#print(paste("o",o,class(o)))
   
@@ -273,8 +276,14 @@ countreads = function(bamfile, index, reads, frag, chromsize, filelist, chrcount
     chromlength <- as.integer(countlist[[element]])
     
     #####is it important to skip chromosome if length doesn't fit?
+	###########COMMENT FROM MAHMOUD################
+	## I think so, yes. Would be nice to get an error here and skip
+	###############################################
     
     als <- readGAlignments(bamfile,index=indexfile,param=ScanBamParam(which=GRanges(element,IRanges(1,as.integer(chromlength)))))
+   	###########COMMENT FROM MAHMOUD################
+	## what is 536870912? You call the same function twice but with that difference
+	###############################################
     alsover <- readGAlignments(bamfile,index=indexfile,param=ScanBamParam(which=GRanges(element,IRanges(as.integer(chromlength),536870912))))
     if(!!length(alsover)){
       #message(paste0(chromName, ", Warning: Chromosome ",element,"has no reads, Skipped!"))
@@ -322,6 +331,10 @@ countreads = function(bamfile, index, reads, frag, chromsize, filelist, chrcount
     en <- end(ranges(curcov))
     rm(curcov,cov)
     gc()
+    ###COMMENT FROM MAHMOUD########
+    ## I couldn't follow this part right before here
+    ## Maybe you can explain to me later
+    #####################################
     #decompress counts to a chromosome size long vector
     reslist <- mapply(makeVectors,st,en,values,SIMPLIFY=FALSE)
     curvector <- unlist(reslist)
@@ -352,7 +365,11 @@ countreads = function(bamfile, index, reads, frag, chromsize, filelist, chrcount
       curvector = curvector/mCount
     }
     
-    
+    ###COMMENT FROM MAHMOUD########
+    ## like in "xcorr", we shouldn't construct this "countlist" variable. 
+    ## If I got it right, this has all the counts for the whole genome. If so, it will for sure be huge, regardless of whether you can delete the  previous "reslist", "st"...etc.
+    ## The alternative to be able to directly call 
+    #####################################
     countlist[[element]] <- curvector
     rm(als,curvector)
     gc()
@@ -1284,7 +1301,9 @@ for (element in chrs)
   #=======================> DONE!
   
   
-  
+  ###COMMENT FROM MAHMOUD####
+  ## Starting here, stuff would be groupped in one function, that just gets called directly inside the readcounting function"..that way peaks are called "on the fly" while getting reads from a file.
+  ###########################
   
   # ======================== 
   # Picking Enriched Windows
@@ -1470,18 +1489,8 @@ for (element in chrs)
   
   
   
-  
+    ###COMMENT FROM MAHMOUD########
+    ## If we can call peaks from with the counting function, we wouldn't need this big for loop over all chromosomes.
+    #####################################
   chrcount=chrcount+1
 }
-
-
-
-
-
-
-
-
-
-
-
-
