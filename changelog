@@ -1,6 +1,5 @@
 ===================
-Version 1.0.7rev3
+Version 1.0.7rev4
 ===================
 
-- fixed bugs in paired-end handling
-- fixed bugs in automated threshold that slowed it down when input was present
+- fixed a bug in window finding

@@ -1,5 +1,5 @@
 ########################################################################
-# JAMMv1.0.7rev3 is a peak finder for joint analysis of NGS replicates.
+# JAMMv1.0.7rev4 is a peak finder for joint analysis of NGS replicates.
 # Copyright (C) 2014-2016  Mahmoud Ibrahim
 #
 # This program is free software: you can redistribute it and/or modify
@@ -900,7 +900,11 @@ coffeeshop = as.numeric(unlist(coffeeshop))
 coffeeshop[coffeeshop != numdup] = 0
 
 if (sum(coffeeshop) != 0) { #Any enriched bins?
-coffeeshop = c(0, diff(coffeeshop))
+if (coffeeshop[1] == numdup) {
+	coffeeshop = c(numdup, diff(coffeeshop))
+} else {
+	coffeeshop = c(0, diff(coffeeshop))
+}
 coffeeshop = cbind(coffeeshop, bins)
 coffeeshopNord = coffeeshop[coffeeshop[,1] == numdup,,drop=FALSE]
 coffeeshopSud = coffeeshop[coffeeshop[,1] == -numdup,,drop=FALSE]
