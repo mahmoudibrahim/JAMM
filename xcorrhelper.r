@@ -22,32 +22,39 @@
 # ============================================== 
 # Parsing Arguments (source: phantom SPP script)
 # ============================================== 
-args = commandArgs(trailingOnly = TRUE) # Read Arguments from command line
+#args = commandArgs(trailingOnly = TRUE) # Read Arguments from command line
 #nargs = length(args) # number of arguments
 
 #Set arguments to default values
-infile = NA # input file
-out = NA # output directory
+#infile = NA # input file
+#out = NA # output directory
 
 #Parsing arguments and storing values
-for (each.arg in args) {
-	#input bed file
-	if (grepl('^-infile=',each.arg)) {
-		arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]] # split on =
-		if (! is.na(arg.split[2]) ) {
-				infile <- arg.split[2]
-		} else {
-			stop('No input file')
-		} 
-	}
-	if (grepl('^-out=',each.arg)) {			
-		arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]] # split on =
-		if (! is.na(arg.split[2]) ) {
-			out <- arg.split[2] 
-		} else {
-			stop('No output directory')
-		}
-	}
+#for (each.arg in args) {
+#	#input bed file
+#	if (grepl('^-infile=',each.arg)) {
+#		arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]] # split on =
+#		if (! is.na(arg.split[2]) ) {
+#				infile <- arg.split[2]
+#		} else {
+#			stop('No input file')
+#		} 
+#	}
+#	if (grepl('^-out=',each.arg)) {			
+#		arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]] # split on =
+#		if (! is.na(arg.split[2]) ) {
+#			out <- arg.split[2] 
+#		} else {
+#			stop('No output directory')
+#		}
+#	}
+#}
+
+if(is.na(infileS)){
+  stop('No input file')
+}
+if (is.na(outS)){
+  stop('No output directory')
 }
 
 #=======================> DONE! 
@@ -58,43 +65,44 @@ for (each.arg in args) {
 # ===================
 
 #Read in variables
-if (file.exists(infile)) {
+print(paste("infile",infileS))
+if (file.exists(infileS)) {
 
-message("@", infile)
-xcorrs = read.table(infile, header=FALSE)
-shifts = as.numeric(xcorrs$V2) 
+  message("@", infileS)
+  xcorrs = read.table(infileS, header=FALSE)
+  shifts = as.numeric(xcorrs$V2) 
 
 
-#how many chromosomes
-num = length(xcorrs$V1)
+  #how many chromosomes
+  num = length(xcorrs$V1)
 
-if (length(xcorrs$V2) > 0) {
-	if (length(xcorrs$V2) > 1)  {
+  if (length(xcorrs$V2) > 0) {
+  	if (length(xcorrs$V2) > 1)  {
 
-		#shift stats
-		avg = mean(shifts)
-		std = sd(shifts)
-		mod = as.numeric(names(sort(-table(shifts)))[1])
-
-		#find out fragment length
-		fraglength = 100 #default
-		default = 1 #was default shift assumed
-
-		if (length(shifts) != 0) {
-			fraglength = ceiling(mean(shifts))
-			default = 0
-		} 
-
-	} else {
-		avg = xcorrs$V2
-		std = xcorrs$V2
-		mod = xcorrs$V2
-		fraglength = xcorrs$V2
-		default = 0
-	}
-} else {
-	fraglength = 100 #default
-}
+  		#shift stats
+  		avg = mean(shifts)
+  		std = sd(shifts)
+  		mod = as.numeric(names(sort(-table(shifts)))[1])
+  
+  		#find out fragment length
+  		fraglength = 100 #default
+  		default = 1 #was default shift assumed
+  
+  		if (length(shifts) != 0) {
+  			fraglength = ceiling(mean(shifts))
+  			default = 0
+  		}
+  
+  	} else {
+  		avg = xcorrs$V2
+  		std = xcorrs$V2
+  		mod = xcorrs$V2
+  		fraglength = xcorrs$V2
+  		default = 0
+  	}
+  } else {
+  	fraglength = 100 #default
+  }
 } else {
 	fraglength = 100
 	default = 1
@@ -110,10 +118,10 @@ if (length(xcorrs$V2) > 0) {
 # =====================
 if (default == 0) {
 writethis = paste0("Number of chromosomes used:", num, "\nAverage strand shift:", avg, "\nStandard Deviation:", std, "\nMode:", mod, "\nFragment Length:", fraglength)
-write(writethis, file = paste0(out, "/xcorrsummary.txt"))
+write(writethis, file = paste0(outS, "/xcorrsummary.txt"))
 
 if (length(xcorrs$V2) > 1)  {
-	i = pdf(file=paste0(out, "/xcorrsummary.pdf"))
+	i = pdf(file=paste0(outS, "/xcorrsummary.pdf"))
 	i = plot(density(shifts), main="Strand Shifts Distribution over Chromosomes")
 	i = dev.off()
 }
@@ -121,7 +129,7 @@ if (length(xcorrs$V2) > 1)  {
 } else if (default == 1) {
 
 writethis = paste0("Number of chromosomes used:", "0", "\nAverage strand shift:", "NA", "\nStandard Deviation:", "NA", "\nMode:", "NA", "\nFragment Length:", fraglength)
-write(writethis, file = paste0(out, "/xcorrsummary.txt"))
+write(writethis, file = paste0(outS, "/xcorrsummary.txt"))
 
 	message("Fragment length estimation failed, default fragment length assumed:", fraglength, "\n")
 }
