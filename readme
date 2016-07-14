@@ -19,6 +19,4 @@ To get information about options available to JAMM users, run the JAMM bash scri
 If you encounter errors or have questions, please email mahmoud.ibrahim@mdc-berlin.de
 
 
-Important Note: JAMM produces a large number of peaks on purpose to allow you to choose your threshold the way you like. The peaks are scored and ranked by column 7  in the output narrowPeak file. If you want a confident list directly from JAMM, please use the option "-e auto".
-
-Thank you.
+Important Note: JAMM produces a large number of peaks on purpose to allow you to choose your threshold the way you like. The peaks are scored and ranked by column 7  in the output narrowPeak file. If you want a confident list directly from JAMM, you could use the option "-e auto", although a better way is probably to see the peaks that are reproducible in your replicates.

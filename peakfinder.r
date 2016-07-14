@@ -1,5 +1,5 @@
 ########################################################################
-# JAMMv1.0.7rev4 is a peak finder for joint analysis of NGS replicates.
+# JAMMv1.0.7rev5 is a peak finder for joint analysis of NGS replicates.
 # Copyright (C) 2014-2016  Mahmoud Ibrahim
 #
 # This program is free software: you can redistribute it and/or modify
@@ -155,19 +155,6 @@ countreads = function(bedfile, reads, frag, chromsize, filelist, chrcount) {
 countreadspe = function(bedfile, reads, chromsize, filelist, chrcount) {
 	
 	o = which(filelist == bedfile)
-	
-	
-	#if (reads[[o]][length(reads[[o]]),2] > chromsize) {
-	#	message(paste0(chromName, ", Warning: Read alignments do not match chromosome length, Skipped!"))
-		
-	#	if (chrcount == 1) {
-	#		message(paste0(chromName, ", ERROR: The first chromosome in the analysis was skipped. I can not calculate normalization factors. You can either delete this chromosome from your chromosome size file or fix the previous warning!"))
-	#		quit()
-	#		system("exit 1")
-	#	} else {
-	#		quit()
-	#	}
-	#}
 	
 	counts = vector(mode = "numeric", length = chromsize)
 	for (j in 1:length(reads[[o]][,1])) {
@@ -367,6 +354,16 @@ initparam = function(coffeeshopNord, coffeeshopSud, numdup, counts, cornum, clus
 
 
 
+#finding out where consecutive basepairs are, from http://stackoverflow.com/questions/16118050/how-to-check-if-a-vector-contains-n-consecutive-numbers/16118320#16118320
+seqle = function(x) { 
+	incr = 1
+	n = length(x)
+	y = x[-1L] != x[-n] + incr 
+	i = c(which(y|is.na(y)),n)
+	list(lengths = diff(c(0L,i)), values = x[head(c(0L,i)+1L,-1L)]) 
+}
+
+
 #find peaks
 findpeak = function(winStart, coffeeshopSud, numdup, C, param, bkgd, resol, counts, noise, startlist, meanAdjust, clustnummer) {
 	
@@ -378,7 +375,7 @@ findpeak = function(winStart, coffeeshopSud, numdup, C, param, bkgd, resol, coun
 	#will store peak information
 	writethis = list()
 	ccx = 1 #default is clustering didNOT work
-
+	take = 1
 	
 	rWinSizeTemp = winEnd - winStart + 1
 	
@@ -401,62 +398,43 @@ findpeak = function(winStart, coffeeshopSud, numdup, C, param, bkgd, resol, coun
 	
 	if (resol != "window") {
 		
-		#clustering (take 1)
-		take = 1
 		set.seed(samplingSeed)
 		noisy = sample(noise, rWinSizeTemp, replace = TRUE)
-		clust = em(param$modelname, Rs+noisy, param$initparam)
+				
+		########clustering START#######
+		clust = em(param$modelname, Rs+noisy, param$initparam) 		#clustering - take 1
 		clust$classification = map(clust$z)
-		if (!((any(diff(clust$classification)) != 0) && (!(any(is.na(clust$classification)))))) { #clustering didn't work, take1
-			
-			#repeat clustering from scratch, take 2!
+		if (numdup > 1) { #check replicates agree on clustering
+			cc = sum(diff(apply(clust$parameters$mean, 1, which.max)))
+			cluster = which.max(clust$parameters$mean[1,]) 
+		} else {
+			cc = 0
+			cluster = which.max(clust$parameters$mean) 
+		}
+		worked = isTRUE((sum(unique(clust$classification))) == (sum(1:clustnummer)))
+		if (worked && (cc == 0)) { #clustering worked
+			ccx = 0
+		} else { #clustering didn't work at take 1
+			take = 2 #repeat clustering from scratch, take 2!
 			set.seed(samplingSeed)
-			init = kmeans(Rs, clustnummer, nstart = 20)
+			init = kmeans(Rs+noisy, clustnummer, nstart = 20)
 			init = unmap(init$cluster)
-			set.seed(samplingSeed)
-			noisy = sample(noise, rWinSizeTemp, replace = TRUE)
 			clust = me(param$modelname, Rs+noisy, init)
 			clust$classification = map(clust$z)
-			if ((any(diff(clust$classification)) != 0) && (!(any(is.na(clust$classification))))) {
-				ccx = 0 #clustering worked, take2
-				take = 2
+			if (numdup > 1) { #check replicates agree on clustering
+				cc = sum(diff(apply(clust$parameters$mean, 1, which.max)))
+				cluster = which.max(clust$parameters$mean[1,]) 
+			} else {
+				cc = 0
+				cluster = which.max(clust$parameters$mean) 
 			}
-		} else {ccx = 0}  #clustering worked, take1
-		 
-		if (ccx != 1) { #clustering worked either in take1 or take2
-					
-			if (numdup > 1) { #check whether all components replicates agreed on clustering assignments
-				cc = vector(mode = "numeric", length = numdup)
-				for (g in 1:numdup) {
-					cc[g] = which.max(clust$parameters$mean[g,]) #which cluster has the largest mean (this is the peak cluster, hopefully!)
-				}
-				ccx = sum(diff(cc))
-				cluster = cc[1]
-				rm(cc)
-			
-				if ((ccx != 0) && (take == 1)) { #not all replicates agreed? Repeat the clustering with from scratch if not already done!
-					set.seed(samplingSeed)
-					init = kmeans(Rs, clustnummer, nstart = 20)
-					init = unmap(init$cluster)
-					set.seed(samplingSeed)
-					noisy = sample(noise, rWinSizeTemp, replace = TRUE)
-					clust = me(param$modelname, Rs+noisy, init)
-					clust$classification = map(clust$z)
-					if ((any(diff(clust$classification)) != 0) && (!(any(is.na(clust$classification))))) { #clustering worked? check whether replicates agreed take 3
-						cc = vector(mode = "numeric", length = numdup)
-						for (g in 1:numdup) {
-							cc[g] = which.max(clust$parameters$mean[g,]) #which cluster has the largest mean (this is the peak cluster, hopefully!)
-						}
-						ccx = sum(diff(cc))
-						cluster = cc[1]
-						rm(cc)
-						take = 3
-					}
-				}
-			} else { #no replicates!
-				cluster = which.max(clust$parameters$mean) #which cluster has the largest mean (this is the peak cluster, hopefully!)
+			worked = isTRUE((sum(unique(clust$classification))) == (sum(1:clustnummer)))
+			if (worked && (cc == 0)) { #clustering worked
+				ccx = 0
 			}
 		}
+		#######clustering END###########
+		
 		
 		if ((ccx != 0) && (reportNoClust=="y")) { resol = "window" } #clustering did not work and windows should be reported
 			
@@ -474,11 +452,9 @@ findpeak = function(winStart, coffeeshopSud, numdup, C, param, bkgd, resol, coun
 			}
 			
 			#find region boundaries
-			loc = 1:length(clust$classification)
-			gmclass = cbind(loc, clust$classification)
-			locPeak = gmclass[gmclass[,2] == cluster,,drop=FALSE]
-			rStart = locPeak[1] #start position of the region
-			rEnd = locPeak[length(locPeak[,1]),1] #end position of the region
+			loc = which(clust$classification == cluster)
+			rStart = loc[1] #start position of the region
+			rEnd = loc[length(loc)] #end position of the region
 		
 			#peak resolution check
 			if (resol == "region") {
@@ -503,13 +479,8 @@ findpeak = function(winStart, coffeeshopSud, numdup, C, param, bkgd, resol, coun
 				}
 			} else if (resol == "peak") {
 				#find out where separate peaks are
-				d = diff(locPeak[,1]) 
-				d[length(d)+1] = 0		
-				locPeak = cbind(locPeak, d)
-				bound1 = which(locPeak[,3] > 1, arr.in=TRUE)
-				bound2 = bound1 + 1
-				bound = locPeak[sort(c(bound1,bound2))]
-				bound = c(rStart, bound, rEnd)
+				d = seqle(loc)
+				bound = sort(c(d$values, (d$values + d$lengths - 1)))
 				w = 1
 				warum = 0
 				while (w < length(bound)) {

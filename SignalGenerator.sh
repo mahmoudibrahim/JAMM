@@ -1,5 +1,5 @@
 ########################################################################
-# JAMMv1.0.7rev4 is a peak finder for joint analysis of NGS replicates.
+# JAMMv1.0.7rev5 is a peak finder for joint analysis of NGS replicates.
 # Copyright (C) 2014-2016  Mahmoud Ibrahim
 #
 # This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@ sPath="`( cd \"$sPath\" && pwd )`"
 usage()
 {
 cat << EOF
-Welcome to JAMM v1.0.7rev4 Signal Generator Script (GNU GPLv3). Copyright (C) 2014-2016  Mahmoud Ibrahim.
+Welcome to JAMM v1.0.7rev5 Signal Generator Script (GNU GPLv3). Copyright (C) 2014-2016  Mahmoud Ibrahim.
 
 This program comes with ABSOLUTELY NO WARRANTY; for details visit http://www.gnu.org/licenses/gpl.html. This is free software, and you are welcome to redistribute it under certain conditions; visit http://www.gnu.org/licenses/gpl.html for details.
 
@@ -119,7 +119,7 @@ fi
 # ============================= 
 # Step One: Initial Processing
 # =============================
-printf "\n\n==========================================================\nStarted JAMM1.0.7rev4 Signal Generator Pipeline...Hang on!\n==========================================================\n\n"
+printf "\n\n==========================================================\nStarted JAMM1.0.7rev5 Signal Generator Pipeline...Hang on!\n==========================================================\n\n"
 
 if [ ! -d "$wdir" ]; then
 	mkdir $wdir #make working directory

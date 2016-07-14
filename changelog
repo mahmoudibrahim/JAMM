@@ -1,5 +1,6 @@
 ===================
-Version 1.0.7rev4
+Version 1.0.7rev5
 ===================
 
-- fixed a bug in window finding
+- add -T option to define a custom temporary directory (thanks to Anthony Mathelier[https://github.com/amathelier])
+- streamlined some code parts related to findpeak function and removed a bug there that affected peaks in some extreme parameter/data combinations
