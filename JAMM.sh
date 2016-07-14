@@ -47,6 +47,7 @@ OPTIONS:
    -d	   keep PCR Dupicates in single-end mode, y or n (default: n --- if -t is "paired", this option has no effect) 
    -t	   Type, single or paired (default: single, requires BED files. paired requires BEDPE files)
    -p	   Number of processors used by R scripts (default: 1)
+   -T      Directory where the temporary working repository will be created (default: /tmp).
 
 EOF
 }
@@ -76,11 +77,11 @@ fraglen="ns"
 bkgdfile="None"
 bdir="None"
 ran=$RANDOM
-wdir=$(mktemp -d)
+tempdir=/tmp
 export LANG=C #locale defaults
 export LC_ALL=C #locale defaults
 
-while getopts "s:g:o:c:m:r:f:p:w:b:t:e:i:d:" OPTION
+while getopts "s:g:o:c:m:r:f:p:w:b:t:e:i:d:T:" OPTION
 do
 	case $OPTION in
 	s) sdir=$OPTARG
@@ -111,6 +112,8 @@ do
 	;;
 	d) uniq=$OPTARG
 	;;
+    T) tempdir=$OPTARG
+    ;;
 	?)
 	usage
 	exit
@@ -149,6 +152,9 @@ if [ $nreps == "0" ]; then
 	echo "No Sample Files Found!"
 	exit 1
 fi
+
+
+wdir=$(mktemp -d -t -p $tempdir)
 #=======================> DONE!
 
 
@@ -334,7 +340,7 @@ fi
 if [ $binsize == "ns" ]; then
 	printf "Getting Bin Size: "
 
-	chr=$(sort -nr -k2 $gsize | head -n 1 | awk -F"\t" '{print $1}');
+	chr=$(sort -T $wdir -nr -k2 $gsize | head -n 1 | awk -F"\t" '{print $1}');
 	samplelist=""
 	frag=""
 	if [ $fraglen != "ns" ]; then
@@ -424,7 +430,9 @@ for f in $wdir/sizes.$ran/*; do #for each chromosome
 					perl "$sPath/readshifter.pl" "$wdir/samples.$ran/$samplefile" $shift $read > "$wdir/samples.$ran/ext.$samplefile"
 				fi
 				if [ $uniq == "n" ]; then
-					perl "$sPath/readshifter.pl" "$wdir/samples.$ran/$samplefile" $shift $read | sort -u > "$wdir/samples.$ran/ext.$samplefile"
+					perl "$sPath/readshifter.pl" \
+                        "$wdir/samples.$ran/$samplefile" $shift $read | \
+                        sort -T $wdir -u > "$wdir/samples.$ran/ext.$samplefile"
 				fi				
 			fi
 		done
@@ -444,7 +452,9 @@ for f in $wdir/sizes.$ran/*; do #for each chromosome
 				perl "$sPath/readshifter.pl" "$wdir/bkgd.$ran/bkgd.$chr.ctrl.bed" $bshift $readC > "$wdir/bkgd.$ran/ext.bkgd.$chr.ctrl.bed"
 			fi
 			if [ $uniq == "n" ]; then
-				perl "$sPath/readshifter.pl" "$wdir/bkgd.$ran/bkgd.$chr.ctrl.bed" $bshift $readC | sort -u > "$wdir/bkgd.$ran/ext.bkgd.$chr.ctrl.bed"
+				perl "$sPath/readshifter.pl" \
+                    "$wdir/bkgd.$ran/bkgd.$chr.ctrl.bed" $bshift $readC | \
+                    sort -T $wdir -u > "$wdir/bkgd.$ran/ext.bkgd.$chr.ctrl.bed"
 			fi
 			fi
 			bkgdfile="$wdir/bkgd.$ran/ext.bkgd.$chr.ctrl.bed"
@@ -523,8 +533,10 @@ cat $out/peaks/*.bed > $out/peaks/all.narrowPeak
 if [[ -s  $out/peaks/all.narrowPeak ]]; then
 	cp $wdir/peaks.$ran/min.peaksize $out/peaks/min.peaksize
 	Rscript "$sPath/peakhelper.r" -filelist="$out/peaks/all.narrowPeak"
-	perl "$sPath/peakfilter.pl" $out/peaks/all.narrowPeak | sort -nr -k7 > $out/peaks/filtered.peaks.narrowPeak
-	cut -f1-10 $out/peaks/all.narrowPeak | awk -F"\t" -v j=0 '$7 > j' | sort -nr -k7 > $out/peaks/all.peaks.narrowPeak
+	perl "$sPath/peakfilter.pl" $out/peaks/all.narrowPeak | \
+        sort -T $wdir -nr -k7 > $out/peaks/filtered.peaks.narrowPeak
+	cut -f1-10 $out/peaks/all.narrowPeak | awk -F"\t" -v j=0 '$7 > j' | \
+        sort -T $wdir -nr -k7 > $out/peaks/all.peaks.narrowPeak
 	rm $out/peaks/all.narrowPeak
 	rm $out/peaks/*.bed
 	rm $out/peaks/min.peaksize
