@@ -112,8 +112,8 @@ do
 	;;
 	d) uniq=$OPTARG
 	;;
-    T) tempdir=$OPTARG
-    ;;
+        T) tempdir=$OPTARG
+        ;;
 	?)
 	usage
 	exit
@@ -153,8 +153,11 @@ if [ $nreps == "0" ]; then
 	exit 1
 fi
 
-
-wdir=$(mktemp -d -t -p $tempdir)
+if [ $tempdir == "/tmp" ]; then
+	wdir=$(mktemp -d -t -p $tempdir)
+else
+	wdir="$tempdir"
+fi
 #=======================> DONE!
 
 
