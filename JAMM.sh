@@ -47,7 +47,7 @@ OPTIONS:
    -d	   keep PCR Dupicates in single-end mode, y or n (default: n --- if -t is "paired", this option has no effect) 
    -t	   Type, single or paired (default: single, requires BED files. paired requires BEDPE files)
    -p	   Number of processors used by R scripts (default: 1)
-   -T      Directory where the temporary working repository will be created (default: /tmp).
+   -T      Directory where the temporary working repository will be created. This directory will be deleted after JAMM is done (default: a new directory is created in /tmp folder).
 
 EOF
 }
