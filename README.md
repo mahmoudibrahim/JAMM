@@ -29,7 +29,7 @@ _Visit the [the Wiki Homepage](https://github.com/mahmoudibrahim/JAMM/wiki) for 
 
 JAMM Documentation
 ------
-https://github.com/mahmoudibrahim/JAMM/wiki/JAMM%27s-Output
+
  * [How to Install JAMM](https://github.com/mahmoudibrahim/JAMM/wiki/Installing-JAMM)
  * [How to Use JAMM](https://github.com/mahmoudibrahim/JAMM/wiki/Usage)
  * [JAMM's Output](https://github.com/mahmoudibrahim/JAMM/wiki/JAMM%27s-Output)
