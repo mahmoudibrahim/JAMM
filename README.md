@@ -29,9 +29,10 @@ _Visit the [the Wiki Homepage](https://github.com/mahmoudibrahim/JAMM/wiki) for 
 
 JAMM Documentation
 ------
-
+https://github.com/mahmoudibrahim/JAMM/wiki/JAMM%27s-Output
  * [How to Install JAMM](https://github.com/mahmoudibrahim/JAMM/wiki/Installing-JAMM)
  * [How to Use JAMM](https://github.com/mahmoudibrahim/JAMM/wiki/Usage)
+ * [JAMM's Output](https://github.com/mahmoudibrahim/JAMM/wiki/JAMM%27s-Output)
  * [Frequently Asked Questions](https://github.com/mahmoudibrahim/JAMM/wiki/Frequently-Asked-Questions)
  * [Parameter Recommendations](https://github.com/mahmoudibrahim/JAMM/wiki/JAMM-Parameter-Recommendation)
  * Of course it is always good to read [the actual paper](http://bioinformatics.oxfordjournals.org/content/31/1/48) :)
