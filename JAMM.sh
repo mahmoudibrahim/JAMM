@@ -136,16 +136,11 @@ then
      usage
      exit 1
 fi
-if [[ -d "$out/peaks" ]]; then
-	printf "\n\nOutput directory $out/peaks already exists. I can't override existing results!\n\n"
+if [ -f "$out/peaks/filtered.peaks.narrowPeak"  ]; then
+	printf "\n\nOutput file $out/peaks/filtered.peaks.narrowPeak already exists. I can't override existing results!\n\n"
 	exit 0
 fi
-if [ $fraglen == "ns" ]; then
-	if [[ -d "$out/xcorr" ]]; then
-		printf "\n\nOutput directory $out/xcorr already exists. I can't override existing results!\n\n"
-		exit 0
-	fi
-fi
+
 nreps=$(ls -1 $sdir/*.bed | wc -l) #count how many sample files
 #no sample files
 if [ $nreps == "0" ]; then
