@@ -12,7 +12,7 @@ If you have questions or need help running JAMM please email us at [this email](
 Download JAMM
 ------
 
-**The latest JAMM version is _JAMMv1.0.7rev2_. [Click here to download it](https://github.com/mahmoudibrahim/JAMM/archive/v1.0.7.2.zip).**
+**The latest JAMM version is _JAMMv1.0.7rev5_. [Click here to download it](https://github.com/mahmoudibrahim/JAMM/archive/JAMMv1.0.7.5.zip).**
 
 If you are interested in older versions, check the [Downloads Archive](https://github.com/mahmoudibrahim/JAMM/wiki/JAMM-Downloads-Archive) or the [Github release page](https://github.com/mahmoudibrahim/JAMM/releases). 
 
@@ -21,9 +21,7 @@ If you are interested in older versions, check the [Downloads Archive](https://g
 Latest News and Updates
 ------
 
-* **Jul 30 2015:** *New version of JAMM released (v1.0.7rev2)*. This version has some minor bug fixes and some cryptic errors replaced by user-friendly messages.
-
-* **Feb 18 2015:** *New version of JAMM released (v1.0.7rev1)*. This version introduces clustering model initialization options among other things, optional PCR duplicates filtering and reports the seed used for all randomization/sampling steps.
+* **Jul 14 2016:** *New version of JAMM released (v1.0.7rev5)*. This version adds -T parameter for custom temporary directory (thanks to @amathelier) as well as streamlined code and fixed bugs in peakfinder.r.
 
 _Visit the [the Wiki Homepage](https://github.com/mahmoudibrahim/JAMM/wiki) for older updates and news._
 
@@ -34,6 +32,7 @@ JAMM Documentation
 
  * [How to Install JAMM](https://github.com/mahmoudibrahim/JAMM/wiki/Installing-JAMM)
  * [How to Use JAMM](https://github.com/mahmoudibrahim/JAMM/wiki/Usage)
+ * [JAMM's Output](https://github.com/mahmoudibrahim/JAMM/wiki/JAMM%27s-Output)
  * [Frequently Asked Questions](https://github.com/mahmoudibrahim/JAMM/wiki/Frequently-Asked-Questions)
  * [Parameter Recommendations](https://github.com/mahmoudibrahim/JAMM/wiki/JAMM-Parameter-Recommendation)
  * Of course it is always good to read [the actual paper](http://bioinformatics.oxfordjournals.org/content/31/1/48) :)
@@ -42,6 +41,7 @@ Please check [the Wiki Homepage](https://github.com/mahmoudibrahim/JAMM/wiki) fo
 
 If you still have questions or need help running JAMM please email us at [this email](http://www.google.com/recaptcha/mailhide/d?k=01vPijd2GG0LEbZV2NyE_rSA==&c=49GEiFp47dZQV_120clczwxYcP3tQ98VWBJtNl6_dBw=).
 
+Note: JAMM produces a large list of peaks on purpose so that you can choose how to threshold it. If you want JAMM to try and automatically threshold it, use "-e auto" option. Read more about this in the [FAQs on the wiki](https://github.com/mahmoudibrahim/JAMM/wiki/Frequently-Asked-Questions).
 
 
 Example Dataset
@@ -58,6 +58,12 @@ Quick Tutorial
 
 On [this link](https://github.com/mahmoudibrahim/JAMM/wiki/Basic-Tutorial), you will find a quick tutorial to show how you can run JAMM on a real dataset.
 
+
+Galaxy Wrapper
+------
+JAMM has a Galaxy wrapper which you can get from here: [https://github.com/mahmoudibrahim/JAMMalaxy](https://github.com/mahmoudibrahim/JAMMalaxy)
+
+The Galaxy wrapper was developed by [Clemens Messerschmidt](https://github.com/messersc)
 
 
 How to Cite JAMM?
