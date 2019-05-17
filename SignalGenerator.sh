@@ -1,6 +1,6 @@
 ########################################################################
-# JAMMv1.0.7rev5 is a peak finder for joint analysis of NGS replicates.
-# Copyright (C) 2014-2016  Mahmoud Ibrahim
+# JAMMv1.0.7rev6 is a peak finder for joint analysis of NGS replicates.
+# Copyright (C) 2014-2019  Mahmoud Ibrahim
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# Contact: mahmoud.ibrahim@mdc-berlin.de
+# Contact: mmibrahim@pm.me
 ########################################################################
 
 ##Finding out the path
@@ -27,7 +27,7 @@ sPath="`( cd \"$sPath\" && pwd )`"
 usage()
 {
 cat << EOF
-Welcome to JAMM v1.0.7rev5 Signal Generator Script (GNU GPLv3). Copyright (C) 2014-2016  Mahmoud Ibrahim.
+Welcome to JAMM v1.0.7rev5 Signal Generator Script (GNU GPLv3). Copyright (C) 2014-2019  Mahmoud Ibrahim.
 
 This program comes with ABSOLUTELY NO WARRANTY; for details visit http://www.gnu.org/licenses/gpl.html. This is free software, and you are welcome to redistribute it under certain conditions; visit http://www.gnu.org/licenses/gpl.html for details.
 

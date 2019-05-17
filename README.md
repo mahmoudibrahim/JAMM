@@ -1,18 +1,18 @@
 JAMM Peak Finder
 ======
 
-**JAMM is a peak finder for NGS datasets (ChIP-Seq, ATAC-Seq, DNase-Seq..etc.) that can integrate replicates and assign peak boundaries accurately. JAMM is applicable to both broad and narrow datasets. Read more [in JAMM's publication](http://bioinformatics.oxfordjournals.org/content/early/2014/09/15/bioinformatics.btu568).** 
+**JAMM is a peak finder for NGS datasets (ChIP-Seq, ATAC-Seq, DNase-Seq..etc.) that can integrate replicates and assign peak boundaries accurately. JAMM is applicable to both broad and narrow datasets. Read more [in JAMM's publication](https://academic.oup.com/bioinformatics/article/31/1/48/2365061).** 
 
-JAMM was developed at the [Ohler lab](http://ohlerlab.mdc-berlin.net/) at [BIMSB-MDC](http://www.mdc-berlin.de/13800178/en/bimsb) in Berlin.
+JAMM was developed at the [Ohler lab](http://ohlerlab.mdc-berlin.net/) at [BIMSB-MDC](https://www.mdc-berlin.de/bimsb) in Berlin.
 
-If you have questions or need help running JAMM please email us at [this email](http://www.google.com/recaptcha/mailhide/d?k=01vPijd2GG0LEbZV2NyE_rSA==&c=49GEiFp47dZQV_120clczwxYcP3tQ98VWBJtNl6_dBw=), we will be happy to help you.
+If you have questions or need help running JAMM please email us at [this email](http://scr.im/jammpro), we will be happy to help you.
 
 
 
 Download JAMM
 ------
 
-**The latest JAMM version is _JAMMv1.0.7rev5_. [Click here to download it](https://github.com/mahmoudibrahim/JAMM/archive/JAMMv1.0.7.5.zip).**
+**The latest JAMM version is _JAMMv1.0.7rev6_. [Click here to download it](https://github.com/mahmoudibrahim/JAMM/archive/JAMMv1.0.7.6.zip).**
 
 If you are interested in older versions, check the [Downloads Archive](https://github.com/mahmoudibrahim/JAMM/wiki/JAMM-Downloads-Archive) or the [Github release page](https://github.com/mahmoudibrahim/JAMM/releases). 
 
@@ -21,7 +21,7 @@ If you are interested in older versions, check the [Downloads Archive](https://g
 Latest News and Updates
 ------
 
-* **Jul 14 2016:** *New version of JAMM released (v1.0.7rev5)*. This version adds -T parameter for custom temporary directory (thanks to @amathelier) as well as streamlined code and fixed bugs in peakfinder.r.
+* **May 17 2019:** *New version of JAMM released (v1.0.7rev6)*. This version features some small changes to input checks.
 
 _Visit the [the Wiki Homepage](https://github.com/mahmoudibrahim/JAMM/wiki) for older updates and news._
 
@@ -35,7 +35,7 @@ JAMM Documentation
  * [JAMM's Output](https://github.com/mahmoudibrahim/JAMM/wiki/JAMM%27s-Output)
  * [Frequently Asked Questions](https://github.com/mahmoudibrahim/JAMM/wiki/Frequently-Asked-Questions)
  * [Parameter Recommendations](https://github.com/mahmoudibrahim/JAMM/wiki/JAMM-Parameter-Recommendation)
- * Of course it is always good to read [the actual paper](http://bioinformatics.oxfordjournals.org/content/31/1/48) :)
+ * Of course it is always good to read [the actual paper](https://academic.oup.com/bioinformatics/article/31/1/48/2365061) :)
 
 Please check [the Wiki Homepage](https://github.com/mahmoudibrahim/JAMM/wiki) for more information on JAMM. 
 
@@ -71,11 +71,10 @@ How to Cite JAMM?
 
 Please cite:
 
-**Ibrahim MM, Lacadie SA, Ohler U (2015). JAMM: A Peak Finder for Joint Analysis of NGS Replicates. _Bioinformatics_, 31(1): 48-55. doi: [10.1093/bioinformatics/btu568] (http://bioinformatics.oxfordjournals.org/content/early/2014/09/15/bioinformatics.btu568)**
+**Ibrahim MM, Lacadie SA, Ohler U (2015). JAMM: A Peak Finder for Joint Analysis of NGS Replicates. _Bioinformatics_, 31(1): 48-55. doi: [10.1093/bioinformatics/btu568] (https://academic.oup.com/bioinformatics/article/31/1/48/23650618)**
 
 
 ---
 
 *Hint: While you run JAMM, you can also go on jammin...*
-
 [![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/HSs1HgM0Wos/0.jpg)](http://www.youtube.com/watch?v=HSs1HgM0Wos)

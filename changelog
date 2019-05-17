@@ -1,6 +1,7 @@
 ===================
-Version 1.0.7rev5
+Version 1.0.7rev6
 ===================
 
-- add -T option to define a custom temporary directory (thanks to Anthony Mathelier[https://github.com/amathelier])
-- streamlined some code parts related to findpeak function and removed a bug there that affected peaks in some extreme parameter/data combinations
+- changed some input checks to make it more compatible with pipeline tools
+- added an input check for -f option
+- updated contact info
