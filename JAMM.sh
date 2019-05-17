@@ -1,6 +1,6 @@
 ########################################################################
-# JAMMv1.0.7rev5 is a peak finder for joint analysis of NGS replicates.
-# Copyright (C) 2014-2016  Mahmoud Ibrahim
+# JAMMv1.0.7rev6 is a peak finder for joint analysis of NGS replicates.
+# Copyright (C) 2014-2019  Mahmoud M Ibrahim
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# Contact: mahmoud.ibrahim@mdc-berlin.de
+# Contact: mmibrahim@pm.me
 ########################################################################
 
 
@@ -28,7 +28,7 @@ sPath="`( cd \"$sPath\" && pwd )`"
 usage()
 {
 cat << EOF
-Welcome to JAMM v1.0.7rev5 (GNU GPLv3). Copyright (C) 2014-2016  Mahmoud Ibrahim.
+Welcome to JAMM v1.0.7rev5 (GNU GPLv3). Copyright (C) 2014-2019  Mahmoud Ibrahim.
 
 This program comes with ABSOLUTELY NO WARRANTY; for details visit http://www.gnu.org/licenses/gpl.html. This is free software, and you are welcome to redistribute it under certain conditions; visit http://www.gnu.org/licenses/gpl.html for details.
 
@@ -141,11 +141,37 @@ if [ -f "$out/peaks/filtered.peaks.narrowPeak"  ]; then
 	exit 0
 fi
 
+if [ $fraglen == "ns" ]; then
+	for j in $out/xcorr/*/xcorrsummary.txt; do
+		if [ -e "$j" ]; then
+			printf "\n\nOutput files in $out/xcorr already exist. I can't override existing results!\n\n"
+			exit 0
+		fi
+	done
+fi
+
 nreps=$(ls -1 $sdir/*.bed | wc -l) #count how many sample files
 #no sample files
 if [ $nreps == "0" ]; then
 	echo "No Sample Files Found!"
 	exit 1
+fi
+
+if [ $fraglen != "ns" ]; then
+	IFS=',' read -ra numTemp <<< "$fraglen"
+	numFrags=$(echo "${#numTemp[@]}")
+	if [ $bdir != "None" ]; then
+		nrepsTemp=$(echo $((nreps + 1)))
+		if [ $numFrags != $nrepsTemp ]; then
+			printf "\n\nThe number of fragment lengths you gave is not the same as the number of sample replicates (and background). There should be as many fragment lengths as number of sample replicates+1\n\n"
+			exit 1
+		fi
+	else
+		if [ $numFrags != $nreps ]; then
+			printf "\n\nThe number of fragment lengths you gave is not the same as the number of sample replicates. There should be as many fragment lengths as there are sample replicates\n\n"
+			exit 1
+		fi
+	fi
 fi
 
 if [ $tempdir == "/tmp" ]; then
@@ -240,8 +266,9 @@ if [ $fraglen == "ns" ]; then
 
 	##Counting Where Reads Start and Calculating Cross Correlation
 	mkdir $wdir/stats.$ran/ #store count files
-	mkdir $out/xcorr #final xcorr results
-
+	if [ ! -d "$out/xcorr" ]; then
+		mkdir $out/xcorr #final xcorr results
+	fi
 
 	printf "Calculating Fragment Length(s)...\n"
 	for f in $wdir/sizes.$ran/*; do #for each chromosome
@@ -285,7 +312,9 @@ if [ $fraglen == "ns" ]; then
 	for f in $sdir/*.bed; do
 		file=$(basename $f)
 		samplefile=$(echo $file | awk -F"." '{print $1}');	
-		mkdir "$out/xcorr/$samplefile" #final xcorr results
+		if [ ! -d "$out/xcorr/$samplefile" ]; then
+			mkdir "$out/xcorr/$samplefile" #final xcorr results
+		fi
 		if [ -f "$wdir/stats.$ran/xc.$samplefile.tab" ]; then
 			cp $wdir/stats.$ran/xc.$samplefile.tab $out/xcorr/$samplefile/shifts.txt	
 		fi
@@ -293,7 +322,9 @@ if [ $fraglen == "ns" ]; then
 	done
 	#report xcorr results (control)
 	if [ $bdir != "None" ]; then
-		mkdir "$out/xcorr/ctrl" #final xcorr results
+		if [ ! -d "$out/xcorr/ctrl" ]; then
+			mkdir "$out/xcorr/ctrl" #final xcorr results
+		fi
 		if [ -f "$wdir/stats.$ran/xc.ctrl.tab" ]; then
 			cp $wdir/stats.$ran/xc.ctrl.tab $out/xcorr/ctrl/shifts.txt
 		fi
@@ -377,8 +408,9 @@ fi
 # Step Four: Calling Peaks
 # ===========================
 mkdir $wdir/peaks.$ran/ #store count files
-mkdir $out/peaks #store peak files
-
+if [ ! -d "$out/peaks" ]; then
+	mkdir $out/peaks #store peak files
+fi
 printf "Calling Peaks...(mode: $mode, resolution: $resol)\n"
 
 
