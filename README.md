@@ -78,5 +78,4 @@ Please cite:
 
 *Hint: While you run JAMM, you can also go on jammin...*
 
-<wiki:video url="https://www.youtube.com/watch?v="/>
 [![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/HSs1HgM0Wos/0.jpg)](http://www.youtube.com/watch?v=HSs1HgM0Wos)
