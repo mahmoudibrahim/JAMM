@@ -1,3 +1,5 @@
+Dev. Branch for JAMM1.1
+
 JAMM Peak Finder
 ======
 
