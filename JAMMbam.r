@@ -1,3 +1,19 @@
+###MMI: Notes (4 June) - test on 1 sample
+# -fragment length estimation works followed by binsize estimation works but then error occurs: Error in fragsS[i]/2 : non-numeric argument to binary operator Calls: source -> withVisible -> eval -> eval Execution halted
+# -specifing fragment size: immediate error  Error: object 'readl' not found
+# -specifying both fragment size and bin size: peak calling starts and finishes successfully- calls almost the same peaks
+
+
+####--->need to at least have one file to source with all major functions
+
+
+
+
+
+
+
+
+
 ########################################################################
 # JAMMv1.0.7rev2 is a peak finder for joint analysis of NGS replicates.
 # Copyright (C) 2014-2015  Mahmoud Ibrahim
@@ -21,11 +37,7 @@
 # this script should be run from bash
 
 ##########!
-#Finding out the path
-#sPath="`dirname \"$0\"`"
-#sPath=dirname(sys.frame(1)$ofile)
-#print(sPath)
-#sPath="`( cd \"$sPath\" && pwd )`"
+
 
 
 # ========================= 
@@ -248,69 +260,6 @@ dir.create(paste0(wdir,"/samples.",ran,"/")) #store sample files
 dupnum = nreps #count how many sample files
 
 
-#separate chromosome 
-#####
-#printf "Loading genome size file..."
-#ext="$wdir/sizes.$ran/"
-##echo "ext $ext, gsize $gsize"
-#awk -v ext="$ext" '{ print >> ext"/size." $1 ".bed" }' $gsize
-#printf "Done!\n"
-
-
-###########Not NECESSARY#########################
-#printf "Processing sample files..."
-#load each chromosome from each sample file
-#for i in $sdir/*.bam; do
-#samplefile=$(basename $i)	
-#	for f in $wdir/sizes.$ran/*; do
-#		sizefile=$(basename $f)
-#		chr=$(echo $sizefile | awk -F"." '{print $2}' | awk -F"." '{print $1}');
-#		awk -v chr="$chr" -v ext="$wdir/samples.$ran/" -v samplefile="$samplefile" -F"\t" '$1 == chr { print $2"\t"$6 >> ext"sample."chr"."samplefile }' "$i" 
-#	done
-#done
-#printf "Done!\n"
-#################################################
-
-
-###############Not necessary#####################
-#if [ $bdir != "None" ]; then
-#concatenate all background files into one file
-#printf "Processing control files..."
-#cat $bdir/*.bed > $wdir/bkgd.$ran/ctrl.bed   ###########this needs to be done inside peakfinder.r!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!###################
-
-#for f in $wdir/sizes.$ran/*; do
-#	sizefile=$(basename $f)
-#	chr=$(echo $sizefile | awk -F"." '{print $2}' | awk -F"." '{print $1}');
-#	awk -v chr="$chr" -v ext="$wdir/bkgd.$ran/" -F"\t" '$1 == chr { print $2"\t"$6 >> ext"bkgd."chr".ctrl.bed" }' "$wdir/bkgd.$ran/ctrl.bed"
-#done
-
-#printf "Done!\n"
-#fi
-#################################################
-
-
-####################not needed!!########################
-#determine average read lengths
-#printf "Getting average read lengths...\n"
-#readL=""
-#if [ $bdir != "None" ]; then
-#	readC=$(awk '{a=$3-$2;print a;}' "$wdir/bkgd.$ran/ctrl.bed" | perl -lane '$a+=$_;END{print $a/$.}' | awk '{a=$1+0.5;print a;}' | cut -d"." -f1)
-#	printf "Control: $readC\n"
-#fi
-#readL=""
-#for s in $sdir/*.bed; do #and for each sample file
-#	file=$(basename $s)
-#	samplefile=$(echo $file | awk -F"." '{print $1}');	
-#	read=$(awk '{a=$3-$2;print a;}' "$s" | perl -lane '$a+=$_;END{print $a/$.}' | awk '{a=$1+0.5;print a;}' | cut -d"." -f1)
-#	printf "$samplefile: $read\n"
-#	readL="$readL,$read"
-#done
-#readL=${readL#","}
-#############################################################
-#=======================> DONE!
-
-
-
 # ============================= 
 # Step Two: Fragment Length
 # =============================
@@ -321,102 +270,57 @@ if ( type == "single" ){
     dir.create(paste0(wdir,"/stats.",ran,"/")) #store count files
     dir.create(paste0(out,"/xcorr/")) #final xcorr results
     cat ("Calculating Fragment Length(s)...\n")
-    #for f in $wdir/sizes.$ran/*; do #for each chromosome
     samplelist=c()
     indexlist=c()
-    #readlist="" not needed!!
-    #sizefile=$(basename $f)
     sizefile=gsize
-    #echo "sizefile " $sizefile
-    #chr=$(echo $sizefile | awk -F"." '{print $2}' | awk -F"." '{print $1}');
+
     
     #list of sample bed files and read lengths
     for (s in list.files(path=paste0(sdir,"/"),pattern="*.bam$", full.names=TRUE)){ #and for each sample file
-      #####for s in $wdir/samples.$ran/*.bam; do #and for each sample file
-      #print(s)
       samplefile=basename(s)
       index=paste0(s,".bai")
-      #echo "index " $index
       if (file.exists(index)){
         indexlist=c(indexlist,index)
-        #echo "indexlist " $indexlist
       } else {
         cat("\n\nPlease provide index file ",index,"!\n\n",sep="")
         quit(status=0)
       }
-      #chr2=$(echo $samplefile | awk -F"." '{print $2}');
-      #####
-      #echo "samplefile " $samplefile
-      #echo "chr2 " $chr2
-      #echo "chr " $chr
-      #####if [ $chr == $chr2 ] #belonging to this chromosome
-      #then
-      samplelist=c(samplelist,paste0(sdir,"/",samplefile))
-      #####
-      #echo "samplelist " $samplelist
-      #fi
+       samplelist=c(samplelist,paste0(sdir,"/",samplefile))
     }
-    #readlist="$readL" NOT needed!!
+    
     #list of control bed files and read lengths
     if (bdir != "None" ){
       for (s in list.files(path=paste0(bdir,"/"),pattern="*.bam$", full.names=TRUE)){ #and for each sample file
         samplefile=basename(s)
         index=paste0(s,".bai")
-        #echo "index " $index
         if (file.exists(index)){
           indexlist=c(indexlist,index)
-          #echo "indexlist " $indexlist      
+
         } else {
           cat("\n\nPlease provide index file ",index,"!\n\n")
           quit(status=0)
         }
-        #chr2=$(echo $samplefile | awk -F"." '{print $2}');
-        #if [ $chr == $chr2 ] #belonging to this chromosome
-        #then
         samplelist=c(samplelist,paste0(bdir,"/",samplefile))
-        #readlist="$readL,$readC" Not needed
-        #fi
       }
     }
-    #remove leading comma
-    #samplelist=${samplelist#","}
-    #indexlist=${indexlist#","}
-    #####
-    #echo "samplelist " $samplelist
-    #echo "indexlist " $indexlist
-                             
-    ##################@Anika you might need to change this#########################
-    #call R script for xcorr calculation 
-    ##Rscript "$sPath/xcorr.r" -s="$wdir/sizes.$ran/size.$chr.bed" -ibam="$samplelist" -d="$wdir/stats.$ran" -p="$cores" -nreps="$nreps" -bkgd="$bdir"
-    #Rscript "$sPath/xcorr.r" -s="$wdir/sizes.$ran/size.$chr.bed" -ibam="$samplelist" -iindex="$indexlist" -d="$wdir/stats.$ran" -p="$cores" -nreps="$nreps" -bkgd="$bdir"
     sS=gsize; ibamS=samplelist; iindexS=indexlist; storeFileS=paste0(wdir,"/stats.",ran); cornumS=cores; nrepsS=nreps; bkgdS=bdir
     source(paste0(sPath,"/xcorr.r"))
-    ##Rscript "$sPath/xcorr.r" -s="$gsize" -ibam="$samplelist" -iindex="$indexlist" -d="$wdir/stats.$ran" -p="$cores" -nreps="$nreps" -bkgd="$bdir"
-    #done
+
     #report xcorr results (samples)
     readl=""
     for (f in list.files(path=paste0(sdir,"/"),pattern="*.bam$", full.names=TRUE)){
-      #echo "starting loop"
       file=basename (f)
-      #samplefile=$(echo $file | awk -F"." '{print $1}'); 
       samplefile = substr(file, 1, nchar(file)-4)
       dir.create(paste0(out,"/xcorr/",samplefile,"/")) #final xcorr results
-      #echo "$wdir/stats.$ran/xc.$samplefile.tab"
       if (file.exists(path=paste0(wdir,"/stats.",ran,"/xc.",samplefile,".tab"))){
-        #print("is")
         file.copy(paste0(wdir,"/stats.",ran,"/xc.",samplefile,".tab"), paste0(out,"/xcorr/",samplefile,"/shifts.txt"))
       }
       readlfile=paste0(wdir,"/stats.",ran,"/xc.rl.",samplefile,".tab")
-      #echo "readlfile is $wdir/stats.$ran/xc.rl.$samplefile.tab"
       
       if (file.exists(readlfile)){
-        #echo "readfile is there"
         conn <- file(readlfile, open="r")
         lines <-readLines(conn)
         for (i in 1:length(lines)){
-          #readlen=$(echo $line | awk -F"," '{print $2}');
-          #readl="$readl,$readlen";
-          #readl=c(readl,lines[[i]])
           readl=paste0(readl,",",lines[[i]])
         }
         close(conn)
@@ -425,15 +329,9 @@ if ( type == "single" ){
       source(paste0(sPath,"/xcorrhelper.r"))
     }
     readl=substr(readl, 2, nchar(readl))
-    ##readl=${readl#","}
-    #echo "readl is $readl"
-    #report xcorr results (control)
     if (bdir != "None"){
-      #echo "not none"
       dir.create(paste0(out,"/xcorr/ctrl/")) #final xcorr results
-      #echo "$wdir/stats.$ran/xc.ctrl.tab"
       if (file.exists(paste0(wdir,"/stats.",ran,"/xc.ctrl.tab"))){
-        #echo "is too"
         file.copy(paste0(wdir,"/stats.",ran,"/xc.ctrl.tab"), paste0(out,"/xcorr/ctrl/shifts.txt"))
       }
       infileS=paste0(out,"/xcorr/ctrl/shifts.txt"); outS=paste0(out,"/xcorr/ctrl")
@@ -480,7 +378,6 @@ if (type == "paired"){
 # =================================
 if (binsize == "ns"){
   print ("Getting Bin Size: ")  
-  ##chr=$(sort -nr -k2 $gsize | head -n 1 | awk -F"\t" '{print $1}');
   samplelist=c()
   indexlist=c()
   frag=c()
@@ -492,7 +389,6 @@ if (binsize == "ns"){
   for (s in list.files(path=paste0(sdir,"/"),pattern="*.bam$", full.names=TRUE)){ #and for each sample file
     samplefile=basename (s)
     index=paste0(s,".bai")
-    #echo "index " $index
     if (file.exists(index)){
       indexlist=c(indexlist,index)
       #echo "indexlist " $indexlist
@@ -500,20 +396,12 @@ if (binsize == "ns"){
       cat("\n\nPlease provide index file $index!\n\n")
       quit(status=0)
     }
-    #chr2=$(echo $samplefile | awk -F"." '{print $2}');
-    #if [ $chr == $chr2 ]
-    #then
-    #samplelist="$samplelist,$wdir/samples.$ran/$samplefile"
-    #samplename=$(echo $samplefile | awk -F"." '{ print $3 }')
-    #samplefilename=$(echo $samplefile | cut -d'.' -f 3-)
     samplename= substr(samplefile, 1, nchar(samplefile)-4)
     samplelist=c(samplelist,paste0(sdir,"/",samplefile))
-    #echo "samplelist $samplelist fraglen $fraglen indexlist $indexlist"
     
     if (fraglen == "ns"){
       conn <- file(paste0(out,"/xcorr/",samplename,"/xcorrsummary.txt"), open="r")
       lines <-readLines(conn)
-      #print(lines)
       for (i in 1:length(lines)){
         if(length(grep("Fragment Length:", lines[i]))>0){
           shift= substr(lines[[i]],17,nchar(lines[[i]]))
@@ -522,15 +410,8 @@ if (binsize == "ns"){
       }
       close(conn)
     }
-    #fi
   }
-  #remove leading comma
-  ##samplelist=${samplelist#","}
-  ##indexlist=${indexlist#","}
-  ##frag=${frag#","}
-  # echo "frag $frag readL $readL"
-  ibamS=samplelist; iindexS=indexlist; sS=gsize; storeFileS=wdir; cornumS=cores; fragsS=frag; typeS=type; nrepsS=nreps; readlS=readl
-  #Rscript "$sPath/bincalculator.r" -ibam="$samplelist" -iindex="$indexlist" -s="$gsize" -rl="$readL" -d="$wdir" -p="$cores" -f="$frag" -type="$type" -nreps="$nreps" -readl="$readl"
+  ibamS=samplelist; iindexS=indexlist; sS=gsize; storeFileS=wdir; cornumS=cores; fragsS=frag; typeS=type; nrepsS=nreps; readlS=readl ########!!!!!!!!!!!!here is the readl issue!--> need to find out how and where read lengths are calculated
   source(paste0(sPath,"/bincalculator.r"))
 }
 
