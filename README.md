@@ -12,7 +12,7 @@ If you have questions or need help running JAMM please email us at [this email](
 Download JAMM
 ------
 
-**The latest JAMM version is _JAMMv1.0.8_. [Click here to download it](https://github.com/mahmoudibrahim/JAMM/archive/JAMMv1.0.7.6.zip).**
+**The latest JAMM version is _JAMMv1.0.7.6_. [Click here to download it](https://github.com/mahmoudibrahim/JAMM/archive/JAMMv1.0.7.6.zip).**
 
 If you are interested in older versions, check the [Downloads Archive](https://github.com/mahmoudibrahim/JAMM/wiki/JAMM-Downloads-Archive) or the [Github release page](https://github.com/mahmoudibrahim/JAMM/releases). 
 
@@ -20,6 +20,10 @@ If you are interested in older versions, check the [Downloads Archive](https://g
 
 Latest News and Updates
 ------
+
+* **Feb. 21 2020:** *JAMM will be updated incrementally over the next few months under version 1.0.8.x* to improve performance and speed. These updates are stable, synced directly to the master repository and released as pre-releases. However, they may change output to different levels, so use at your risk.
+
+The most recent stable and tested version is [v1.0.7.6](https://github.com/mahmoudibrahim/JAMM/archive/JAMMv1.0.7.6.zip) which you can get from the [releases page](https://github.com/mahmoudibrahim/JAMM/releases).
 
 * **May 17 2019:** *New version of JAMM released (v1.0.7rev6)*. This version features some small changes to input checks.
 
