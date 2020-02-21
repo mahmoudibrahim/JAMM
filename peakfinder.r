@@ -1,6 +1,6 @@
 ########################################################################
-# JAMMv1.0.7rev6 is a peak finder for joint analysis of NGS replicates.
-# Copyright (C) 2014-2019  Mahmoud Ibrahim
+# JAMMv1.0.8 is a peak finder for joint analysis of NGS replicates.
+# Copyright (C) 2014-2020  Mahmoud Ibrahim
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ presched = TRUE #Set preschedule in mclapply to TRUE or FALSE
 cutoff = NA #To enforce an SNR cutoff ratio for bin enrichment calling, delete NA and enter the number you want.
 strict = 1 #To make bin enrichment calling more / less strict, increase / decrease this number.
 meanAdjust = "n" #Adjust the initialization mean vector for each window before clustering? If you want to do so, change this to "y".
+normAdjust = TRUE #Adjust background normalization for each chromosome according to other chromosomes? FALSE makes each chromosome normalization independent of the others
 options(warn = -1, scipen = 1000) #R will not report any warnings (warn = -1), R will not use scientific notation (scipen = 1000).
 #=======================> DONE! 
 
@@ -137,11 +138,10 @@ countreads = function(bedfile, reads, frag, chromsize, filelist, chrcount) {
 		counts = counts/mCount
 		write(paste(mCount), file = paste0(out, "/norma.", o, ".info"))
 	} else {
-		meanCounts = mean(as.numeric(read.table(paste0(out, "/norma.", o, ".info"))[[1]]))
-		if ((mCount >  (5*meanCounts)) || (mCount <  (0.2*meanCounts))) {
+		write(paste(mCount), file = paste0(out, "/norma.", o, ".info"), append = TRUE)
+		if (normAdjust) {
+			meanCounts = mean(as.numeric(read.table(paste0(out, "/norma.", o, ".info"))[[1]]))
 			mCount = meanCounts
-		} else {
-			write(paste(mCount), file = paste0(out, "/norma.", o, ".info"), append = TRUE)
 		}
 		counts = counts/mCount
 	}
@@ -167,11 +167,10 @@ countreadspe = function(bedfile, reads, chromsize, filelist, chrcount) {
 		counts = counts/mCount
 		write(paste(mCount), file = paste0(out, "/norma.", o, ".info"))
 	} else {
-		meanCounts = mean(as.numeric(read.table(paste0(out, "/norma.", o, ".info"))[[1]]))
-		if ((mCount >  (5*meanCounts)) || (mCount <  (0.2*meanCounts))) {
+		write(paste(mCount), file = paste0(out, "/norma.", o, ".info"), append = TRUE)
+		if (normAdjust) {
+			meanCounts = mean(as.numeric(read.table(paste0(out, "/norma.", o, ".info"))[[1]]))
 			mCount = meanCounts
-		} else {
-			write(paste(mCount), file = paste0(out, "/norma.", o, ".info"), append = TRUE)
 		}
 		counts = counts/mCount
 	}

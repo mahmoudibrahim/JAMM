@@ -1,7 +1,5 @@
-===================
-Version 1.0.7rev6
-===================
+==============
+Version 1.0.8
+==============
 
-- changed some input checks to make it more compatible with pipeline tools
-- added an input check for -f option
-- updated contact info
+- changed normalization options to either global or chromosome specific, option in peakfinder.r is normAdjust (default is TRUE)
