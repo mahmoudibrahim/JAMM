@@ -986,6 +986,7 @@ peakfindermain <- function(chromname,countlist,kpduplicates=FALSE,chromreference
   minpeak = floor(binSize / 4)
   
   #make bins vector
+  print(binSize)
   bins = seq(from = 1, to = (chromlength - 1), by = binSize)
   numdup=nrepsS
   #=======================> DONE!

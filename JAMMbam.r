@@ -1,3 +1,7 @@
+#Rscript JAMMbam.r -s=/home/mibrahim/Dropbox/dev/jamm_testdata -g=/home/mibrahim/Dropbox/dev/jamm_testdata/chrSizes21.csize -o=/home/mibrahim/Dropbox/dev/jamm_testdata/bamrt265 -f=100,100 -b=200 -p=16
+
+###MMI: Notes (22 February) - test on 2 samples, specifiying fragments and bins-- works now, deleted some commented out code
+
 ###MMI: Notes (4 June) - test on 1 sample
 # -fragment length estimation works followed by binsize estimation works but then error occurs: Error in fragsS[i]/2 : non-numeric argument to binary operator Calls: source -> withVisible -> eval -> eval Execution halted
 # -specifing fragment size: immediate error  Error: object 'readl' not found
@@ -349,23 +353,15 @@ if (type == "paired"){
   for (f in list.files(path=paste0(sdir,"/"),pattern="*.bed$", full.names=TRUE)){
     file=basename (f)
     samplefile = substr(file, 1, nchar(file)-4)
-    #samplefile=$(echo $file | awk -F"." '{print $1}');  
     dir.create(paste0(out,"/xcorr/",samplefile))
-    #####not in R
-    #frag=$(awk '{a=$6-$2;print a;}' $f | perl -lane '$a+=$_;END{print $a/$.}' | awk '{a=$1+0.5;print a;}' | cut -d"." -f1)
-    #echo "Average_from_paired  $frag" > $out/xcorr/$samplefile/shifts.txt
-    #Rscript "$sPath/xcorrhelper.r" -infile="$out/xcorr/$samplefile/shifts.txt" -out="$out/xcorr/$samplefile"
+   
   }
   if (bdir != "None"){
     dir.create(paste0(out,"/xcorr/ctrl")) #final xcorr results
     for (f in list.files(path=paste0(wdir,"/bkgd.",ran,"/"),pattern="ctrl.bed$", full.names=TRUE)){ #and for each sample file
       file=basename (f)
       samplefile= substr(file, 1, nchar(file)-4)
-      #####not in R
-      #frag=$(awk '{a=$6-$2;print a;}' $f | perl -lane '$a+=$_;END{print $a/$.}' | awk '{a=$1+0.5;print a;}' | cut -d"." -f1)
-      #echo "Average_from_paired  $frag" > $out/xcorr/ctrl/shifts.txt
-      #Rscript "$sPath/xcorrhelper.r" -infile="$out/xcorr/ctrl/shifts.txt" -out="$out/xcorr/ctrl"
-    }
+        }
   }
 }
 #=======================> DONE!
@@ -391,7 +387,6 @@ if (binsize == "ns"){
     index=paste0(s,".bai")
     if (file.exists(index)){
       indexlist=c(indexlist,index)
-      #echo "indexlist " $indexlist
     } else {
       cat("\n\nPlease provide index file $index!\n\n")
       quit(status=0)
@@ -440,7 +435,6 @@ if (type == "single"){
     cat("binsize=", binsize)
   }
   counting=1;  		
-  #for f in $wdir/sizes.$ran/*; do #for each chromosome
   samplelist=c()
   indexlist=c()
   frag=c()
@@ -449,31 +443,21 @@ if (type == "single"){
     frag=fraglen
   }
   
-  #sizefile=$(basename $f)
   sizefile=gsize
-  #chr=$(echo $sizefile | awk -F"." '{print $2}' | awk -F"." '{print $1}');
   
-  #printf "Chromosome $chr: "
   
   #list of sample bed files and fragment lengths
   for (s in list.files(path=paste0(sdir,"/"),pattern="*.bam$", full.names=TRUE)){ #and for each sample file
     samplefile=basename (s)
     index=paste0(s,".bai")
-    #echo "index " $index
     if (file.exists(index)){
       indexlist=c(indexlist,index)
-      #echo "indexlist " $indexlist
     } else {
       cat("\n\nPlease provide index file ",index,"!\n\n", sep="")
       quit(status=0)
     }
-    #chr2=$(echo $samplefile | awk -F"." '{print $2}');
-    #if [ $chr == $chr2 ] #belonging to this chromosome
-    #then
-    #	samplelist="$samplelist,$wdir/samples.$ran/ext.$samplefile"
+    
     samplelist=c(samplelist,paste0(sdir,"/",samplefile))
-    #	samplename=$(echo $samplefile | awk -F"." '{ print $3 }')
-    #	samplefilename=$(echo $samplefile | cut -d'.' -f 3-)
     samplename= substr(samplefile, 1, nchar(samplefile)-4)
     
     if (fraglen == "ns"){
@@ -489,20 +473,13 @@ if (type == "single"){
       k=k+1
     }
     
+    k=1
     if (fraglen != "ns"){
-      shift = strsplit(frag, ",", fixed = TRUE)[[k]]
-      #shift=$(echo $frag | cut -f "$k" -d ",")  
-      ##			  	read=$(echo $readL | cut -f "$k" -d ",")
+      shift = as.numeric(unlist(strsplit(frag, ",", fixed = TRUE))[k])
       k=k+1
     }
-    #if [ $uniq == "y" ]; then
-    #	perl "$sPath/readshifter.pl" "$wdir/samples.$ran/$samplefile" $shift $read > "$wdir/samples.$ran/ext.$samplefile"
-    #fi
-    #if [ $uniq == "n" ]; then
-    # perl "$sPath/readshifter.pl" "$wdir/samples.$ran/$samplefile" $shift $read | sort -u > "$wdir/samples.$ran/ext.$samplefile"
-    #fi				
-    #fi
-  }
+    print(shift)
+   }
   
   
   #control file
@@ -522,15 +499,7 @@ if (type == "single"){
       l=dupnum+1
       bshift = strsplit(frag, ",", fixed = TRUE)[[l]]
     }
-    #    	if [ -f "$wdir/bkgd.$ran/bkgd.$chr.ctrl.bed" ]; then
-    #	  	  if [ $uniq == "y" ]; then
-    #	  		  perl "$sPath/readshifter.pl" "$wdir/bkgd.$ran/bkgd.$chr.ctrl.bed" $bshift $readC > "$wdir/bkgd.$ran/ext.bkgd.$chr.ctrl.bed"
-    #	  	  fi
-    #	  	  if [ $uniq == "n" ]; then
-    #	  		  perl "$sPath/readshifter.pl" "$wdir/bkgd.$ran/bkgd.$chr.ctrl.bed" $bshift $readC | sort -u > "$wdir/bkgd.$ran/ext.bkgd.$chr.ctrl.bed"
-    #	  	  fi
-    #		  fi
-    #		  bkgdfile="$wdir/bkgd.$ran/ext.bkgd.$chr.ctrl.bed"
+   
     for (s in list.files(path=paste0(bdir,"/"),pattern="*.bam$", full.names=TRUE)){ #and for each sample file
       samplefile=basename (s)
       index=paste0(s,".bai")
@@ -558,25 +527,16 @@ if (type == "single"){
   print(paste("nbkgd is",nbkgd))
   
   #call the peak calling R script
-  ##Rscript "$sPath/peakfinder.r" -sfile="$f" -chrcount="$counting" -bednames="$samplelist" -frag="$frag" -bkgd="$bkgdfile" -out="$wdir/peaks.$ran/" -clustnummer="$clustno" -resolution="$resol" -window="$window" -p="$cores" -bin="$binsize" -type="$type" -initModel="$initModel" -windowe="$windowe" -nreps="$nreps" -uniq="$uniq"
-  sfileS=gsize; ibamS=samplelist; fragS=frag; bkgdS=bdir; outS=paste0(wdir,"/peaks.",ran,"/"); clustnummerS=clustno; resolS=resol; winSizeS=window; cornumS=cores; binsizeS=binsize; typeS=type; initializeS=initModel; windoweS=windowe; nrepsS=nreps; nbkgdS=nbkgd; uniqS=uniq; iindexS=indexlist
+  sfileS=gsize; ibamS=samplelist; fragS=shift; bkgdS=bdir; outS=paste0(wdir,"/peaks.",ran,"/"); clustnummerS=clustno; resolS=resol; winSizeS=window; cornumS=cores; binsizeS=binsize; typeS=type; initializeS=initModel; windoweS=windowe; nrepsS=nreps; nbkgdS=nbkgd; uniqS=uniq; iindexS=indexlist
   source(paste0(sPath,"/peakfinder.r"))
-  #Rscript "$sPath/peakfinder.r" -sfile="$gsize" -chrcount="$counting" -ibam="$samplelist" -frag="$frag" -bkgd="$bdir" -out="$wdir/peaks.$ran/" -clustnummer="$clustno" -resolution="$resol" -window="$window" -p="$cores" -bin="$binsize" -type="$type" -initModel="$initModel" -windowe="$windowe" -nreps="$nreps" -nbkgd="$nbkgd" -uniq="$uniq" -iindex="$indexlist"
-  ##counting=$(($counting+1));
+
   
   for (s in list.files(path=paste0(wdir,"/peaks.",ran,"/"),pattern="*.peaks.bed$", full.names=TRUE)){
     file=basename (s)
-    ##chromname=$(echo -n $file | head -c -10);
-    #print(paste("file",file,"s",s))
     file.copy(s, paste0(out,"/peaks/",file))
     file.remove(s)
   }
-  ## echo "$wdir/peaks.$ran/$chr.peaks.bed"
-  ## if [ -s "$wdir/peaks.$ran/$chr.peaks.bed" ]; then
-  ##	 cp "$wdir/peaks.$ran/$chr.peaks.bed" "$out/peaks/$chr.peaks.bed"
-  ##	 rm "$wdir/peaks.$ran/$chr.peaks.bed"
-  ##	fi
-  ##done
+
   counting=1;                     
 }
                                                                 
@@ -593,40 +553,27 @@ if (type == "paired"){
   for (f in list.files(path=paste0(wdir,"/sizes.",ran,"/"), full.names=TRUE)){#,pattern="*")) #for each chromosome
     samplelist=c()
     sizefile=basename(f)
-    #chr=$(echo $sizefile | awk -F"." '{print $2}' | awk -F"." '{print $1}');
-    #printf "Chromosome $chr: "
+  
     #list of sample bed files and fragment lengths
     for (s in list.files(path=paste0(wdir,"/samples.",ran,"/"),pattern="*.bed$", full.names=TRUE)){ #and for each sample file
       samplefile=basename(s)
-      ##chr2=$(echo $samplefile | awk -F"." '{print $2}');
-      ##if [ $chr == $chr2 ] #belonging to this chromosome
-      ##then
+
       samplelist=c(samplelist,paste0(wdir,"/samples.",ran,"/",samplefile))
       samplename=samplename= substr(samplefile, 1, nchar(samplefile)-4)
-      ##samplename=$(echo $samplefile | awk -F"." '{ print $3 }')
-      ##samplefilename=$(echo $samplefile | cut -d'.' -f 3-)
+
       x=paste0(sdir,"/",samplename)
       ##fi
     }
     #control file
     bkgdfile="None"
     if (bdir != "None"){
-      ##bkgdfile="$wdir/bkgd.$ran/bkgd.$chr.ctrl.bed"
       bkgdfile=paste0(wdir,"/bkgd.",ran,"/bkgd.ctrl.bed")
     }
-    ##remove leading comma                                                                 
-    ##samplelist=${samplelist#","}
-    ##frag=${frag#","}
-    #call the peak calling R script
-    ##Rscript "$sPath/peakfinder.r" -sfile="$f" -chrcount="$counting" -bednames="$samplelist" -frag="NA" -bkgd=$bkgdfile -out="$wdir/peaks.$ran/" -clustnummer="$clustno" -resolution="$resol" -window="$window" -p="$cores" -bin="$binsize" -type="$type" -initModel="$initModel" -windowe="$windowe" -nreps="$nreps"
-    #sfileS=f; chrcountS=counting; bednamesS=samplelist; fragS=NA; bkgdS=bkgdfile; outS=paste0(wdir,"/peaks.",ran,"/"); clustnummerS=clustno; resolutionS=resol; windowS=window; pS=cores; binS=binsize; typeS=type; initModelS=initModel; windoweS=windowe; nrepsS=nreps
+   
     sfileS=gsize; ibamS=samplelist; fragS=frag; bkgdS=bdir; outS=paste0(wdir,"/peaks.",ran,"/"); clustnummerS=clustno; resolS=resol; winSizeS=window; cornumS=cores; binsizeS=binsize; typeS=type; initializeS=initModel; windoweS=windowe; nrepsS=nreps; nbkgdS=nbkgd; uniqS=uniq; iindexS=indexlist
     source(paste0(sPath,"/peakfinder.r"))
     counting=counting+1
-    ##if [ -s "$wdir/peaks.$ran/$chr.peaks.bed" ]; then
-    ##cp "$wdir/peaks.$ran/$chr.peaks.bed" "$out/peaks/$chr.peaks.bed"
-    ##rm "$wdir/peaks.$ran/$chr.peaks.bed"
-    ##fi
+
     if (file.exists(paste0(wdir,"/peaks.",ran,"/peaks.bed"))){
       file.copy(paste0(wdir,"/peaks.",ran,"/peaks.bed"),paste0(out,"/peaks/peaks.bed"))
       file.remove(paste0(wdir,"/peaks.",ran,"/peaks.bed"))
@@ -637,7 +584,6 @@ if (type == "paired"){
 
 
 #concatenate, sort and filter
-#cat $out/peaks/*.bed > $out/peaks/all.narrowPeak
 for (s in list.files(path=paste0(out,"/peaks/"),pattern="*.bed$", full.names=TRUE)){
   if(file.info(s)$size == 0){
     next()
@@ -648,19 +594,15 @@ for (s in list.files(path=paste0(out,"/peaks/"),pattern="*.bed$", full.names=TRU
   }
 }
 
-#cat $out/peaks/*.bed > $out/peaks/all.narrowPeak 
-#if [[ -s  $out/peaks/all.narrowPeak ]]; then
+
 if (file.exists(paste0(out,"/peaks/all.narrowPeak")) && file.info(paste0(out,"/peaks/all.narrowPeak"))$size != 0){
-  #cp $wdir/peaks.$ran/min.peaksize $out/peaks/min.peaksize
-  #Rscript "$sPath/peakhelper.r" -filelist="$out/peaks/all.narrowPeak"
-  #Rscript "$sPath/peakfilter.r" -filelist="$out/peaks/all.narrowPeak" -dest="$out/peaks/filtered.peaks.narrowPeak" -abovezero="$out/peaks/all.peaks.narrowPeak"  
+
   file.copy(paste0(wdir,"/peaks.",ran,"/min.peaksize"), paste0(out,"/peaks/min.peaksize"))
   bednamesS=paste0(out,"/peaks/all.narrowPeak")
   source (paste0(sPath,"/peakhelper.r"))
   bednamesS=paste0(out,"/peaks/all.narrowPeak"); destfileS=paste0(out,"/peaks/filtered.peaks.narrowPeak"); abovezerofileS=paste0(out,"/peaks/all.peaks.narrowPeak")
   source(paste0(sPath,"/peakfilter.r"))
-  ##perl "$sPath/peakfilter.pl" $out/peaks/all.narrowPeak | sort -nr -k7 > $out/peaks/filtered.peaks.narrowPeak
-  ##cut -f1-10 $out/peaks/all.narrowPeak | awk -F"\t" -v j=0 '$7 > j' | sort -nr -k7 > $out/peaks/all.peaks.narrowPeak 
+
   file.remove(paste0(out,"/peaks/all.narrowPeak"))
   file.remove(paste0(out,"/peaks/min.peaksize"))
   for (s in list.files(path=paste0(out,"/peaks/"),pattern="*.bed$", full.names=TRUE)){
@@ -674,7 +616,7 @@ if (file.exists(paste0(out,"/peaks/all.narrowPeak")) && file.info(paste0(out,"/p
 
 
 unlink(wdir, recursive=TRUE)
-#rm -rf $wdir
+
 
 
 
