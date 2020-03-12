@@ -19,36 +19,6 @@
 ########################################################################
 
 
-# ============================================== 
-# Parsing Arguments (source: phantom SPP script)
-# ============================================== 
-#args = commandArgs(trailingOnly = TRUE) # Read Arguments from command line
-#nargs = length(args) # number of arguments
-
-#Set arguments to default values
-#infile = NA # input file
-#out = NA # output directory
-
-#Parsing arguments and storing values
-#for (each.arg in args) {
-#	#input bed file
-#	if (grepl('^-infile=',each.arg)) {
-#		arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]] # split on =
-#		if (! is.na(arg.split[2]) ) {
-#				infile <- arg.split[2]
-#		} else {
-#			stop('No input file')
-#		} 
-#	}
-#	if (grepl('^-out=',each.arg)) {			
-#		arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]] # split on =
-#		if (! is.na(arg.split[2]) ) {
-#			out <- arg.split[2] 
-#		} else {
-#			stop('No output directory')
-#		}
-#	}
-#}
 
 if(is.na(infileS)){
   stop('No input file')

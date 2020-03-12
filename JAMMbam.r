@@ -1,5 +1,7 @@
 #Rscript JAMMbam.r -s=/home/mibrahim/Dropbox/dev/jamm_testdata -g=/home/mibrahim/Dropbox/dev/jamm_testdata/chrSizes21.csize -o=/home/mibrahim/Dropbox/dev/jamm_testdata/bamrt265 -f=100,100 -b=200 -p=16
 
+###MMI: Notes (12 March) - specifying fragment length but not bin size doesn't work because xcorr is where read length is calculated. TODO: implement function to get read length, and start source function file.
+
 ###MMI: Notes (22 February) - test on 2 samples, specifiying fragments and bins-- works now, deleted some commented out code
 
 ###MMI: Notes (4 June) - test on 1 sample
@@ -68,7 +70,7 @@ fraglen="ns"
 bkgdfile="None"
 bdir="None"
 ran=trunc(runif(1,0,32767))
-wdir=tempdir()
+wdir="/home/mibrahim/Dropbox/dev/jamm_testdata/wdir"
 #Sys.setenv(LC_ALL = C)
 Sys.setenv(LANG = C)
 #export LANG=C #locale defaults
